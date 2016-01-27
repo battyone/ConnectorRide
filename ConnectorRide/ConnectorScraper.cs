@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -22,6 +23,7 @@ namespace Knapcode.ConnectorRide
                 jsonWriter.Indentation = 4;
                 jsonWriter.Formatting = Formatting.Indented;
 
+                var startTime = DateTimeOffset.UtcNow;
                 var scheduleReferences = await _client.GetSchedulesAsync();
 
                 bool started = false;
@@ -31,6 +33,10 @@ namespace Knapcode.ConnectorRide
 
                     if (!started)
                     {
+                        jsonWriter.WriteStartObject();
+                        jsonWriter.WritePropertyName("StartTime");
+                        jsonWriter.WriteValue(startTime);
+                        jsonWriter.WritePropertyName("Schedules");
                         jsonWriter.WriteStartArray();
                         started = true;
                     }
@@ -40,6 +46,9 @@ namespace Knapcode.ConnectorRide
                 }
 
                 jsonWriter.WriteEndArray();
+                jsonWriter.WritePropertyName("EndTime");
+                jsonWriter.WriteValue(DateTimeOffset.UtcNow);
+                jsonWriter.WriteEndObject();
             }
         }
     }
