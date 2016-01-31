@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Knapcode.SocketToMe.Http;
 
-namespace Knapcode.ConnectorRide.Runner
+namespace Knapcode.ConnectorRide.Tool
 {
     public class Program
     {

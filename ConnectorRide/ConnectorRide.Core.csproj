@@ -7,8 +7,8 @@
     <ProjectGuid>{21ED1861-0AC6-49E3-BC9A-857DD89052E6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Knapcode.ConnectorRide</RootNamespace>
-    <AssemblyName>Knapcode.ConnectorRide</AssemblyName>
+    <RootNamespace>Knapcode.ConnectorRide.Core</RootNamespace>
+    <AssemblyName>Knapcode.ConnectorRide.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

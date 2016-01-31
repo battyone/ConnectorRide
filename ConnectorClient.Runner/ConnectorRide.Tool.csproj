@@ -7,8 +7,8 @@
     <ProjectGuid>{7AFF70D2-722B-4033-9387-6DE136191F29}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Knapcode.ConnectorRide.Runner</RootNamespace>
-    <AssemblyName>Knapcode.ConnectorRide.Runner</AssemblyName>
+    <RootNamespace>Knapcode.ConnectorRide.Tool</RootNamespace>
+    <AssemblyName>Knapcode.ConnectorRide.Tool</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -50,9 +50,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConnectorRide\ConnectorRide.csproj">
+    <ProjectReference Include="..\ConnectorRide\ConnectorRide.Core.csproj">
       <Project>{21ED1861-0AC6-49E3-BC9A-857DD89052E6}</Project>
-      <Name>ConnectorRide</Name>
+      <Name>ConnectorRide.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
