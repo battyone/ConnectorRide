@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectorRide.Core", "ConnectorRide\ConnectorRide.Core.csproj", "{21ED1861-0AC6-49E3-BC9A-857DD89052E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectorRide.Core", "ConnectorRide.Core\ConnectorRide.Core.csproj", "{21ED1861-0AC6-49E3-BC9A-857DD89052E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectorRide.Tool", "ConnectorClient.Runner\ConnectorRide.Tool.csproj", "{7AFF70D2-722B-4033-9387-6DE136191F29}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectorRide.Tool", "ConnectorRide.Tool\ConnectorRide.Tool.csproj", "{7AFF70D2-722B-4033-9387-6DE136191F29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Knapcode.ConnectorRide.Core;
 using Knapcode.SocketToMe.Http;
 
 namespace Knapcode.ConnectorRide.Tool
@@ -12,7 +13,7 @@ namespace Knapcode.ConnectorRide.Tool
             MainAsync(args).Wait();
         }
 
-        public static async Task MainAsync(string[] args)
+        private static async Task MainAsync(string[] args)
         {
             // initialize
             var handler = new NetworkHandler();
@@ -21,7 +22,7 @@ namespace Knapcode.ConnectorRide.Tool
             var connectorScraper = new ConnectorScraper(connectorClient);
 
             // scrape
-            await connectorScraper.ScrapeSchedulesAsync(Console.Out);
+            await connectorScraper.ScrapeSchedulesAsync(Console.Out).ConfigureAwait(false);
             Console.WriteLine();
         }
     }

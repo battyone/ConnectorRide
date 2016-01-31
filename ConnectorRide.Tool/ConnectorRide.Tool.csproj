@@ -50,7 +50,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConnectorRide\ConnectorRide.Core.csproj">
+    <ProjectReference Include="..\ConnectorRide.Core\ConnectorRide.Core.csproj">
       <Project>{21ED1861-0AC6-49E3-BC9A-857DD89052E6}</Project>
       <Name>ConnectorRide.Core</Name>
     </ProjectReference>

@@ -1,6 +1,6 @@
 using System;
 
-namespace Knapcode.ConnectorRide
+namespace Knapcode.ConnectorRide.Core
 {
     public class ConnectorClientException : Exception
     {

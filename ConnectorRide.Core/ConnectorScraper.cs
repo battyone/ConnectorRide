@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Knapcode.ConnectorRide
+namespace Knapcode.ConnectorRide.Core
 {
     public class ConnectorScraper
     {
@@ -20,12 +20,12 @@ namespace Knapcode.ConnectorRide
             using (var jsonWriter = new JsonTextWriter(textWriter))
             {
                 var startTime = DateTimeOffset.UtcNow;
-                var scheduleReferences = await _client.GetSchedulesAsync();
+                var scheduleReferences = await _client.GetSchedulesAsync().ConfigureAwait(false);
 
                 bool started = false;
                 foreach (var scheduleReference in scheduleReferences)
                 {
-                    var schedule = await _client.GetScheduleAsync(scheduleReference);
+                    var schedule = await _client.GetScheduleAsync(scheduleReference).ConfigureAwait(false);
 
                     if (!started)
                     {

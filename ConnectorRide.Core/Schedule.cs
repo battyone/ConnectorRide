@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Knapcode.ConnectorRide
+namespace Knapcode.ConnectorRide.Core
 {
     public class Schedule
     {

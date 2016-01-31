@@ -1,4 +1,4 @@
-namespace Knapcode.ConnectorRide
+namespace Knapcode.ConnectorRide.Core
 {
     public class ScheduleReference
     {

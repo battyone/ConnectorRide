@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -13,7 +12,7 @@ using AngleSharp.Services.Default;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Knapcode.ConnectorRide
+namespace Knapcode.ConnectorRide.Core
 {
     public class ConnectorClient
     {
@@ -32,7 +31,7 @@ namespace Knapcode.ConnectorRide
 
         public async Task<IEnumerable<ScheduleReference>> GetSchedulesAsync()
         {
-            var document = await _lazyContext.Value.OpenAsync("https://www.connectorride.mobi/Schedules");
+            var document = await _lazyContext.Value.OpenAsync("https://www.connectorride.mobi/Schedules").ConfigureAwait(false);
 
             return document
                 .QuerySelectorAll("a[href]")
@@ -45,7 +44,7 @@ namespace Knapcode.ConnectorRide
         public async Task<Schedule> GetScheduleAsync(ScheduleReference reference)
         {
             // get the schedule page
-            var scheduleDocument = await _lazyContext.Value.OpenAsync(reference.Href);
+            var scheduleDocument = await _lazyContext.Value.OpenAsync(reference.Href).ConfigureAwait(false);
 
             var mapLink = scheduleDocument
                 .QuerySelectorAll("a[href]")
@@ -58,7 +57,7 @@ namespace Knapcode.ConnectorRide
             }
 
             // get the map page
-            var mapDocument = await _lazyContext.Value.OpenAsync(mapLink.Href);
+            var mapDocument = await _lazyContext.Value.OpenAsync(mapLink.Href).ConfigureAwait(false);
 
 
             // extract the name
