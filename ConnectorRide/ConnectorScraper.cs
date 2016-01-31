@@ -19,10 +19,6 @@ namespace Knapcode.ConnectorRide
         {
             using (var jsonWriter = new JsonTextWriter(textWriter))
             {
-                jsonWriter.IndentChar = ' ';
-                jsonWriter.Indentation = 4;
-                jsonWriter.Formatting = Formatting.Indented;
-
                 var startTime = DateTimeOffset.UtcNow;
                 var scheduleReferences = await _client.GetSchedulesAsync();
 
