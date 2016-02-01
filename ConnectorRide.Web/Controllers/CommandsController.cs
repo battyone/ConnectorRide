@@ -14,7 +14,7 @@ namespace Knapcode.ConnectorRide.Web.Controllers
         public async Task<UploadResult> UpdateAsync()
         {
             // initialize configuration
-            var configuration = new ConfigurationService();
+            var settings = new StorageSettings(new SettingsService());
 
             // initialize scraper
             var handler = new NetworkHandler();
@@ -35,9 +35,9 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             var storageClient = new Client();
             var uploadRequest = new UploadRequest
             {
-                Container = configuration.StorageContainer,
+                Container = settings.Container,
                 ContentType = "application/json",
-                PathFormat = configuration.StoragePathFormat,
+                PathFormat = settings.SchedulePathFormat,
                 Stream = resultStream,
                 Trace = TextWriter.Null,
                 UpdateLatest = true
@@ -46,7 +46,7 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             // upload
             using (resultStream)
             {
-                return await storageClient.UploadAsync(configuration.StorageConnectionString, uploadRequest);
+                return await storageClient.UploadAsync(settings.SchedulePathFormat, uploadRequest);
             }
         }
     }
