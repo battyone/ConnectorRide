@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace Knapcode.ConnectorRide.Web
+namespace Knapcode.ConnectorRide.Web.Settings
 {
     public class SettingsService
     {
