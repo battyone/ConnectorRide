@@ -46,7 +46,7 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             // upload
             using (resultStream)
             {
-                return await storageClient.UploadAsync(settings.SchedulePathFormat, uploadRequest);
+                return await storageClient.UploadAsync(settings.ConnectionString, uploadRequest);
             }
         }
     }
