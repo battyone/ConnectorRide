@@ -22,7 +22,7 @@ namespace Knapcode.ConnectorRide.Tool
             var connectorScraper = new ConnectorScraper(connectorClient);
 
             // scrape
-            await connectorScraper.ScrapeSchedulesAsync(Console.Out).ConfigureAwait(false);
+            await connectorScraper.RealTimeScrapeAsync(Console.Out).ConfigureAwait(false);
             Console.WriteLine();
         }
     }

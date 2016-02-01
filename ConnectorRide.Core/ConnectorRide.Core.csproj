@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="ConnectorClient.cs" />
     <Compile Include="ConnectorClientException.cs" />
+    <Compile Include="ConnectorScrapeResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schedule.cs" />
     <Compile Include="ScheduleReference.cs" />

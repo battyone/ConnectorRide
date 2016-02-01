@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -15,7 +16,27 @@ namespace Knapcode.ConnectorRide.Core
             _client = client;
         }
 
-        public async Task ScrapeSchedulesAsync(TextWriter textWriter)
+        public async Task<ConnectorScrapeResult> ScrapeAsync()
+        {
+            var startTime = DateTimeOffset.UtcNow;
+
+            var scheduleReferences = await _client.GetSchedulesAsync().ConfigureAwait(false);
+            var schedules = new List<Schedule>();
+            foreach (var scheduleReference in scheduleReferences)
+            {
+                var schedule = await _client.GetScheduleAsync(scheduleReference).ConfigureAwait(false);
+                schedules.Add(schedule);
+            }
+
+            return new ConnectorScrapeResult
+            {
+                StartTime = startTime,
+                Schedules = schedules,
+                EndTime = DateTimeOffset.UtcNow
+            };
+        }
+        
+        public async Task RealTimeScrapeAsync(TextWriter textWriter)
         {
             using (var jsonWriter = new JsonTextWriter(textWriter))
             {
