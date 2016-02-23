@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Knapcode.ConnectorRide.Core.Models;
 
 namespace Knapcode.ConnectorRide.Core
 {

@@ -53,10 +53,13 @@
     <Compile Include="ConnectorClientException.cs" />
     <Compile Include="ConnectorScrapeResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Schedule.cs" />
-    <Compile Include="ScheduleReference.cs" />
+    <Compile Include="Models\Schedule.cs" />
+    <Compile Include="Models\ScheduleReference.cs" />
     <Compile Include="ConnectorScraper.cs" />
-    <Compile Include="Stop.cs" />
+    <Compile Include="Models\MapStop.cs" />
+    <Compile Include="Models\TableStop.cs" />
+    <Compile Include="Models\TableStopTime.cs" />
+    <Compile Include="Models\TableTrip.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

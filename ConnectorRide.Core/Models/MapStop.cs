@@ -1,6 +1,6 @@
-﻿namespace Knapcode.ConnectorRide.Core
+﻿namespace Knapcode.ConnectorRide.Core.Models
 {
-    public class Stop
+    public class MapStop
     {
         public string Name { get; set; }
         public string Address { get; set; }
