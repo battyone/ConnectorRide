@@ -5,7 +5,7 @@ namespace Knapcode.ConnectorRide.Core.Models
     public class Schedule
     {
         public string Name { get; set; }
-        public MapStop[] MapStops { get; set; }
-        public TableTrip[] TableTrips { get; set; }
+        public Map Map { get; set; }
+        public Table Table { get; set; }
     }
 }

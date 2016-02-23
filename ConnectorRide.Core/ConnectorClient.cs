@@ -54,14 +54,14 @@ namespace Knapcode.ConnectorRide.Core
 
             // extract the name
             var name = ExtractName(reference, scheduleDocument);
-            var tableTrips = ExtractTableTrips(reference, scheduleDocument);
-            var mapStops = await ExtractMapStopsAsync(reference, scheduleDocument);
+            var table = ExtractTable(reference, scheduleDocument);
+            var map = await ExtractMapAsync(reference, scheduleDocument);
 
             return new Schedule
             {
                 Name = name,
-                TableTrips = tableTrips,
-                MapStops = mapStops
+                Table = table,
+                Map = map
             };
         }
 
@@ -77,7 +77,7 @@ namespace Knapcode.ConnectorRide.Core
             return name;
         }
 
-        private static TableTrip[] ExtractTableTrips(ScheduleReference reference, IDocument scheduleDocument)
+        private static Table ExtractTable(ScheduleReference reference, IDocument scheduleDocument)
         {
             var scheduleTable = scheduleDocument
                 .QuerySelectorAll("h2+div table")
@@ -142,10 +142,14 @@ namespace Knapcode.ConnectorRide.Core
                 });
             }
 
-            return trips.ToArray();
+            return new Table
+            {
+                Stops = stops.ToArray(),
+                Trips = trips.ToArray()
+            };
         }
 
-        private async Task<MapStop[]> ExtractMapStopsAsync(ScheduleReference reference, IDocument scheduleDocument)
+        private async Task<Map> ExtractMapAsync(ScheduleReference reference, IDocument scheduleDocument)
         {
             var mapLink = scheduleDocument
                 .QuerySelectorAll("a[href]")
@@ -156,11 +160,10 @@ namespace Knapcode.ConnectorRide.Core
                 throw new ConnectorClientException($"The map link could not be found on the schedule page: {reference.Href}");
             }
 
-            var mapStops = await ExtractMapStopsAsync(mapLink.Href);
-            return mapStops;
+            return await ExtractMapAsync(mapLink.Href);
         }
 
-        private async Task<MapStop[]> ExtractMapStopsAsync(string mapHref)
+        private async Task<Map> ExtractMapAsync(string mapHref)
         {
             // get the map page
             var mapDocument = await _lazyContext.Value.OpenAsync(mapHref).ConfigureAwait(false);
@@ -178,17 +181,12 @@ namespace Knapcode.ConnectorRide.Core
             }
 
             // extract the stops
-            var mapStops = ExtractMapStops(mapScript.Element.Text, mapScript.Match.Groups["Start"].Index);
-            return mapStops;
-        }
+            var stops = ExtractMapStops(mapScript.Element.Text, mapScript.Match.Groups["Start"].Index);
 
-        private IBrowsingContext GetContext()
-        {
-            var requester = new HttpClientRequester(_client);
-            var loaderService = new LoaderService(new[] { requester });
-            var configuration = Configuration.Default.With(loaderService);
-
-            return BrowsingContext.New(configuration);
+            return new Map
+            {
+                Stops = stops
+            };
         }
 
         private MapStop[] ExtractMapStops(string input, int offset)
@@ -200,6 +198,15 @@ namespace Knapcode.ConnectorRide.Core
             var stops = token.ToObject<MapStop[]>();
 
             return stops;
+        }
+
+        private IBrowsingContext GetContext()
+        {
+            var requester = new HttpClientRequester(_client);
+            var loaderService = new LoaderService(new[] { requester });
+            var configuration = Configuration.Default.With(loaderService);
+
+            return BrowsingContext.New(configuration);
         }
     }
 }
