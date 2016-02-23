@@ -52,6 +52,8 @@ namespace Knapcode.ConnectorRide.Core
                     if (!started)
                     {
                         jsonWriter.WriteStartObject();
+                        jsonWriter.WritePropertyName("Version");
+                        jsonWriter.WriteValue("2.0.0");
                         jsonWriter.WritePropertyName("StartTime");
                         jsonWriter.WriteValue(startTime);
                         jsonWriter.WritePropertyName("Schedules");
