@@ -50,7 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
-    <Compile Include="ClientException.cs" />
+    <Compile Include="ConnectorRideException.cs" />
     <Compile Include="ScraperModels\Result.cs" />
     <Compile Include="ScraperModels\Schedule.cs" />
     <Compile Include="ClientModels\MapReference.cs" />

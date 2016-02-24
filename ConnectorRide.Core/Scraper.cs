@@ -8,12 +8,18 @@ using Newtonsoft.Json.Linq;
 
 namespace Knapcode.ConnectorRide.Core
 {
-    public class Scraper
+    public interface IScraper
+    {
+        Task<Result> ScrapeAsync();
+        Task RealTimeScrapeAsync(TextWriter textWriter);
+    }
+
+    public class Scraper : IScraper
     {
         private const string Version = "3.0.0";
-        private readonly Client _client;
+        private readonly IClient _client;
 
-        public Scraper(Client client)
+        public Scraper(IClient client)
         {
             _client = client;
         }
@@ -22,7 +28,7 @@ namespace Knapcode.ConnectorRide.Core
         {
             var startTime = DateTimeOffset.UtcNow;
 
-            var scheduleReferences = await _client.GetSchedulesAsync().ConfigureAwait(false);
+            var scheduleReferences = await _client.GetScheduleReferencesAsync().ConfigureAwait(false);
             var schedules = new List<Schedule>();
 
             foreach (var scheduleReference in scheduleReferences)
@@ -59,7 +65,7 @@ namespace Knapcode.ConnectorRide.Core
                 jsonWriter.WritePropertyName("Schedules");
                 jsonWriter.WriteStartArray();
                 
-                var scheduleReferences = await _client.GetSchedulesAsync().ConfigureAwait(false);
+                var scheduleReferences = await _client.GetScheduleReferencesAsync().ConfigureAwait(false);
                 foreach (var scheduleReference in scheduleReferences)
                 {
                     jsonWriter.WriteStartObject();
