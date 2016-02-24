@@ -55,13 +55,39 @@ namespace Knapcode.ConnectorRide.Core
             // extract the name
             var name = ExtractName(reference, scheduleDocument);
             var table = ExtractTable(reference, scheduleDocument);
-            var map = await ExtractMapAsync(reference, scheduleDocument);
+            var mapReference = ExtractMapReference(reference, scheduleDocument);
 
             return new Schedule
             {
                 Name = name,
                 Table = table,
-                Map = map
+                MapReference = mapReference
+            };
+        }
+
+        public async Task<Map> GetMapAsync(MapReference reference)
+        {
+            // get the map page
+            var mapDocument = await _lazyContext.Value.OpenAsync(reference.Href).ConfigureAwait(false);
+
+            // extract the stops
+            var mapScript = mapDocument
+                .QuerySelectorAll("script")
+                .OfType<IHtmlScriptElement>()
+                .Select(x => new { Element = x, Match = StopsRegex.Match(x.Text) })
+                .FirstOrDefault(x => x.Match.Success);
+
+            if (mapScript == null)
+            {
+                throw new ConnectorClientException($"The map data could not be found on the schedule map page: {reference.Href}");
+            }
+
+            // extract the stops
+            var stops = ExtractMapStops(mapScript.Element.Text, mapScript.Match.Groups["Start"].Index);
+
+            return new Map
+            {
+                Stops = stops
             };
         }
 
@@ -149,7 +175,7 @@ namespace Knapcode.ConnectorRide.Core
             };
         }
 
-        private async Task<Map> ExtractMapAsync(ScheduleReference reference, IDocument scheduleDocument)
+        private MapReference ExtractMapReference(ScheduleReference reference, IDocument scheduleDocument)
         {
             var mapLink = scheduleDocument
                 .QuerySelectorAll("a[href]")
@@ -160,33 +186,7 @@ namespace Knapcode.ConnectorRide.Core
                 throw new ConnectorClientException($"The map link could not be found on the schedule page: {reference.Href}");
             }
 
-            return await ExtractMapAsync(mapLink.Href);
-        }
-
-        private async Task<Map> ExtractMapAsync(string mapHref)
-        {
-            // get the map page
-            var mapDocument = await _lazyContext.Value.OpenAsync(mapHref).ConfigureAwait(false);
-
-            // extract the stops
-            var mapScript = mapDocument
-                .QuerySelectorAll("script")
-                .OfType<IHtmlScriptElement>()
-                .Select(x => new {Element = x, Match = StopsRegex.Match(x.Text)})
-                .FirstOrDefault(x => x.Match.Success);
-
-            if (mapScript == null)
-            {
-                throw new ConnectorClientException($"The map data could not be found on the schedule map page: {mapHref}");
-            }
-
-            // extract the stops
-            var stops = ExtractMapStops(mapScript.Element.Text, mapScript.Match.Groups["Start"].Index);
-
-            return new Map
-            {
-                Stops = stops
-            };
+            return new MapReference {Href = mapLink.Href};
         }
 
         private MapStop[] ExtractMapStops(string input, int offset)

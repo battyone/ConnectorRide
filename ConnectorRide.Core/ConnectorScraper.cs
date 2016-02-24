@@ -41,28 +41,28 @@ namespace Knapcode.ConnectorRide.Core
         {
             using (var jsonWriter = new JsonTextWriter(textWriter))
             {
-                var startTime = DateTimeOffset.UtcNow;
+                jsonWriter.WriteStartObject();
+                jsonWriter.WritePropertyName("Version");
+                jsonWriter.WriteValue("3.0.0");
+                jsonWriter.WritePropertyName("StartTime");
+                jsonWriter.WriteValue(DateTimeOffset.UtcNow);
+                jsonWriter.WritePropertyName("Schedules");
+                jsonWriter.WriteStartArray();
+                
                 var scheduleReferences = await _client.GetSchedulesAsync().ConfigureAwait(false);
-
-                bool started = false;
                 foreach (var scheduleReference in scheduleReferences)
                 {
+                    jsonWriter.WriteStartObject();
+                    jsonWriter.WritePropertyName("Name");
                     var schedule = await _client.GetScheduleAsync(scheduleReference).ConfigureAwait(false);
+                    jsonWriter.WriteValue(schedule.Name);
+                    jsonWriter.WritePropertyName("Table");
+                    JObject.FromObject(schedule.Table).WriteTo(jsonWriter);
 
-                    if (!started)
-                    {
-                        jsonWriter.WriteStartObject();
-                        jsonWriter.WritePropertyName("Version");
-                        jsonWriter.WriteValue("2.0.0");
-                        jsonWriter.WritePropertyName("StartTime");
-                        jsonWriter.WriteValue(startTime);
-                        jsonWriter.WritePropertyName("Schedules");
-                        jsonWriter.WriteStartArray();
-                        started = true;
-                    }
-
-                    var json = JObject.FromObject(schedule);
-                    json.WriteTo(jsonWriter);
+                    jsonWriter.WritePropertyName("Map");
+                    var map = await _client.GetMapAsync(schedule.MapReference).ConfigureAwait(false);
+                    JObject.FromObject(map).WriteTo(jsonWriter);
+                    jsonWriter.WriteEndObject();
                 }
 
                 jsonWriter.WriteEndArray();
