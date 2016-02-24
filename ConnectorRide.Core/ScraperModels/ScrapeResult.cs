@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Knapcode.ConnectorRide.Core.ScraperModels
 {
-    public class Result
+    public class ScrapeResult
     {
         public string Version { get; set; }
         public DateTimeOffset StartTime { get; set; }

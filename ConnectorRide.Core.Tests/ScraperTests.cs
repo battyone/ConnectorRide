@@ -52,7 +52,7 @@ namespace Knapcode.ConnectorRide.Core.Tests
             await target.RealTimeScrapeAsync(stringWriter);
 
             // Assert
-            var deserialize = JsonConvert.DeserializeObject<Result>(stringWriter.ToString());
+            var deserialize = JsonConvert.DeserializeObject<ScrapeResult>(stringWriter.ToString());
             deserialize.ShouldBeEquivalentTo(scrapeResult);
         }
 

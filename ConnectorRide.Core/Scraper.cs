@@ -11,7 +11,7 @@ namespace Knapcode.ConnectorRide.Core
 {
     public interface IScraper
     {
-        Task<Result> ScrapeAsync();
+        Task<ScrapeResult> ScrapeAsync();
         Task RealTimeScrapeAsync(TextWriter textWriter);
     }
 
@@ -27,7 +27,7 @@ namespace Knapcode.ConnectorRide.Core
             _client = client;
         }
 
-        public async Task<Result> ScrapeAsync()
+        public async Task<ScrapeResult> ScrapeAsync()
         {
             var startTime = _systemTime.UtcNow;
 
@@ -47,7 +47,7 @@ namespace Knapcode.ConnectorRide.Core
                 });
             }
 
-            return new Result
+            return new ScrapeResult
             {
                 Version = Version,
                 StartTime = startTime,

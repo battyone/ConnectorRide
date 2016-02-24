@@ -130,8 +130,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExceptionHandler.cs" />
-    <Compile Include="Services\CommandsService.cs" />
-    <Compile Include="Services\ThrottlingException.cs" />
     <Compile Include="Settings\ConnectorRideSettings.cs" />
     <Compile Include="Controllers\CommandsController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -143,6 +141,9 @@
       <Project>{21ed1861-0ac6-49e3-bc9a-857dd89052e6}</Project>
       <Name>ConnectorRide.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
