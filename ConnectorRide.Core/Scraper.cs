@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Knapcode.ConnectorRide.Core.Models;
+using Knapcode.ConnectorRide.Core.ClientModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

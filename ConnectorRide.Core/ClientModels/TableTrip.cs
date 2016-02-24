@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Knapcode.ConnectorRide.Core.Models
+namespace Knapcode.ConnectorRide.Core.ClientModels
 {
     public class TableTrip
     {

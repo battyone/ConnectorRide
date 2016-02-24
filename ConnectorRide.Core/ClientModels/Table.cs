@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Knapcode.ConnectorRide.Core.Models
+namespace Knapcode.ConnectorRide.Core.ClientModels
 {
     public class Table
     {

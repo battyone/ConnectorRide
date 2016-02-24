@@ -1,4 +1,4 @@
-namespace Knapcode.ConnectorRide.Core.Models
+namespace Knapcode.ConnectorRide.Core.ClientModels
 {
     public class TableStop
     {

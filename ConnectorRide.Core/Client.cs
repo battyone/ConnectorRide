@@ -10,7 +10,7 @@ using AngleSharp.Dom;
 using AngleSharp.Dom.Html;
 using AngleSharp.Io.Network;
 using AngleSharp.Services.Default;
-using Knapcode.ConnectorRide.Core.Models;
+using Knapcode.ConnectorRide.Core.ClientModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

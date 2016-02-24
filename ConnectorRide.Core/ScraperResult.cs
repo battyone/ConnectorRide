@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Knapcode.ConnectorRide.Core.Models;
+using Knapcode.ConnectorRide.Core.ClientModels;
 
 namespace Knapcode.ConnectorRide.Core
 {
