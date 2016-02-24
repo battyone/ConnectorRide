@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Knapcode.ConnectorRide.Core.ClientModels;
+using Knapcode.ConnectorRide.Core.ScraperModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -10,6 +10,7 @@ namespace Knapcode.ConnectorRide.Core
 {
     public class Scraper
     {
+        private const string Version = "3.0.0";
         private readonly Client _client;
 
         public Scraper(Client client)
@@ -17,20 +18,29 @@ namespace Knapcode.ConnectorRide.Core
             _client = client;
         }
 
-        public async Task<ScraperResult> ScrapeAsync()
+        public async Task<Result> ScrapeAsync()
         {
             var startTime = DateTimeOffset.UtcNow;
 
             var scheduleReferences = await _client.GetSchedulesAsync().ConfigureAwait(false);
             var schedules = new List<Schedule>();
+
             foreach (var scheduleReference in scheduleReferences)
             {
-                var schedule = await _client.GetScheduleAsync(scheduleReference).ConfigureAwait(false);
-                schedules.Add(schedule);
+                var clientSchedule = await _client.GetScheduleAsync(scheduleReference).ConfigureAwait(false);
+                var map = await _client.GetMapAsync(clientSchedule.MapReference).ConfigureAwait(false);
+
+                schedules.Add(new Schedule
+                {
+                    Name = clientSchedule.Name,
+                    Table = clientSchedule.Table,
+                    Map = map
+                });
             }
 
-            return new ScraperResult
+            return new Result
             {
+                Version = Version,
                 StartTime = startTime,
                 Schedules = schedules,
                 EndTime = DateTimeOffset.UtcNow

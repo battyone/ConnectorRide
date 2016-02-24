@@ -51,7 +51,8 @@
   <ItemGroup>
     <Compile Include="Client.cs" />
     <Compile Include="ClientException.cs" />
-    <Compile Include="ScraperResult.cs" />
+    <Compile Include="ScraperModels\Result.cs" />
+    <Compile Include="ScraperModels\Schedule.cs" />
     <Compile Include="ClientModels\MapReference.cs" />
     <Compile Include="ClientModels\Map.cs" />
     <Compile Include="ClientModels\Table.cs" />
