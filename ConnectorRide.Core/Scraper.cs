@@ -17,7 +17,7 @@ namespace Knapcode.ConnectorRide.Core
             _client = client;
         }
 
-        public async Task<ScrapeResult> ScrapeAsync()
+        public async Task<ScraperResult> ScrapeAsync()
         {
             var startTime = DateTimeOffset.UtcNow;
 
@@ -29,7 +29,7 @@ namespace Knapcode.ConnectorRide.Core
                 schedules.Add(schedule);
             }
 
-            return new ScrapeResult
+            return new ScraperResult
             {
                 StartTime = startTime,
                 Schedules = schedules,

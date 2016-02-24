@@ -4,7 +4,7 @@ using Knapcode.ConnectorRide.Core.Models;
 
 namespace Knapcode.ConnectorRide.Core
 {
-    public class ScrapeResult
+    public class ScraperResult
     {
         public DateTimeOffset StartTime { get; set; }
         public IEnumerable<Schedule> Schedules { get; set; }
