@@ -8,16 +8,16 @@ using Newtonsoft.Json.Linq;
 
 namespace Knapcode.ConnectorRide.Core
 {
-    public class ConnectorScraper
+    public class Scraper
     {
-        private readonly ConnectorClient _client;
+        private readonly Client _client;
 
-        public ConnectorScraper(ConnectorClient client)
+        public Scraper(Client client)
         {
             _client = client;
         }
 
-        public async Task<ConnectorScrapeResult> ScrapeAsync()
+        public async Task<ScrapeResult> ScrapeAsync()
         {
             var startTime = DateTimeOffset.UtcNow;
 
@@ -29,7 +29,7 @@ namespace Knapcode.ConnectorRide.Core
                 schedules.Add(schedule);
             }
 
-            return new ConnectorScrapeResult
+            return new ScrapeResult
             {
                 StartTime = startTime,
                 Schedules = schedules,

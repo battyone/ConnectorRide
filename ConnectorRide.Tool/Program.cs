@@ -18,8 +18,8 @@ namespace Knapcode.ConnectorRide.Tool
             // initialize
             var handler = new NetworkHandler();
             var httpClient = new HttpClient(handler);
-            var connectorClient = new ConnectorClient(httpClient);
-            var connectorScraper = new ConnectorScraper(connectorClient);
+            var connectorClient = new Client(httpClient);
+            var connectorScraper = new Scraper(connectorClient);
 
             // scrape
             await connectorScraper.RealTimeScrapeAsync(Console.Out).ConfigureAwait(false);

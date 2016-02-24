@@ -8,6 +8,7 @@ using Knapcode.ConnectorRide.Core;
 using Knapcode.ConnectorRide.Web.Settings;
 using Knapcode.SocketToMe.Http;
 using Knapcode.ToStorage.Core.AzureBlobStorage;
+using Client = Knapcode.ConnectorRide.Core.Client;
 
 namespace Knapcode.ConnectorRide.Web.Services
 {
@@ -38,8 +39,8 @@ namespace Knapcode.ConnectorRide.Web.Services
                 // initialize scraper
                 var handler = new NetworkHandler();
                 var httpClient = new HttpClient(handler);
-                var connectorClient = new ConnectorClient(httpClient);
-                var connectorScraper = new ConnectorScraper(connectorClient);
+                var connectorClient = new Client(httpClient);
+                var connectorScraper = new Scraper(connectorClient);
 
                 // scrape
                 var resultStream = new MemoryStream();
@@ -51,7 +52,7 @@ namespace Knapcode.ConnectorRide.Web.Services
                 resultStream.Position = 0;
 
                 // initialize storage
-                var storageClient = new Client();
+                var storageClient = new ToStorage.Core.AzureBlobStorage.Client();
                 var uploadRequest = new UploadRequest
                 {
                     Container = settings.StorageContainer,

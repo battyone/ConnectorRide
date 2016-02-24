@@ -16,7 +16,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Knapcode.ConnectorRide.Core
 {
-    public class ConnectorClient
+    public class Client
     {
         private static readonly Regex StopTimeRegex = new Regex(
             @"(?<Hour>\d+):(?<Minute>\d+) (?<Period>AM|PM)",
@@ -29,7 +29,7 @@ namespace Knapcode.ConnectorRide.Core
         private readonly Lazy<IBrowsingContext> _lazyContext;
         private readonly HttpClient _client;
 
-        public ConnectorClient(HttpClient client)
+        public Client(HttpClient client)
         {
             _client = client;
             _lazyContext = new Lazy<IBrowsingContext>(GetContext);
@@ -79,7 +79,7 @@ namespace Knapcode.ConnectorRide.Core
 
             if (mapScript == null)
             {
-                throw new ConnectorClientException($"The map data could not be found on the schedule map page: {reference.Href}");
+                throw new ClientException($"The map data could not be found on the schedule map page: {reference.Href}");
             }
 
             // extract the stops
@@ -96,7 +96,7 @@ namespace Knapcode.ConnectorRide.Core
             var nameElement = scheduleDocument.QuerySelector("h2.pageTitle");
             if (nameElement == null)
             {
-                throw new ConnectorClientException($"The schedule name could not be found on the schedule page: {reference.Href}");
+                throw new ClientException($"The schedule name could not be found on the schedule page: {reference.Href}");
             }
 
             var name = nameElement.TextContent.Trim();
@@ -111,7 +111,7 @@ namespace Knapcode.ConnectorRide.Core
                 .FirstOrDefault();
             if (scheduleTable == null)
             {
-                throw new ConnectorClientException($"The schedule table could not be found on the schedule page: {reference.Href}");
+                throw new ClientException($"The schedule table could not be found on the schedule page: {reference.Href}");
             }
 
             var stops = scheduleTable
@@ -137,7 +137,7 @@ namespace Knapcode.ConnectorRide.Core
 
                 if (cells.Length != stops.Count)
                 {
-                    throw new ConnectorClientException($"One of rows of the schedule table does not have the right number of columns on the schedule page: {reference.Href}");
+                    throw new ClientException($"One of rows of the schedule table does not have the right number of columns on the schedule page: {reference.Href}");
                 }
 
                 var stopTimes = new List<TableStopTime>();
@@ -183,7 +183,7 @@ namespace Knapcode.ConnectorRide.Core
                 .FirstOrDefault(a => a.Href.Contains("Schedules/Map?name="));
             if (mapLink == null)
             {
-                throw new ConnectorClientException($"The map link could not be found on the schedule page: {reference.Href}");
+                throw new ClientException($"The map link could not be found on the schedule page: {reference.Href}");
             }
 
             return new MapReference {Href = mapLink.Href};
