@@ -18,7 +18,7 @@ namespace Knapcode.ConnectorRide.Core
 {
     public interface IClient
     {
-        Task<IEnumerable<ScheduleReference>> GetScheduleReferencesAsync();
+        Task<ScheduleReference[]> GetScheduleReferencesAsync();
         Task<Schedule> GetScheduleAsync(ScheduleReference reference);
         Task<Map> GetMapAsync(MapReference reference);
     }
@@ -42,7 +42,7 @@ namespace Knapcode.ConnectorRide.Core
             _lazyContext = new Lazy<IBrowsingContext>(GetContext);
         }
 
-        public async Task<IEnumerable<ScheduleReference>> GetScheduleReferencesAsync()
+        public async Task<ScheduleReference[]> GetScheduleReferencesAsync()
         {
             var document = await _lazyContext.Value.OpenAsync("https://www.connectorride.mobi/Schedules").ConfigureAwait(false);
 

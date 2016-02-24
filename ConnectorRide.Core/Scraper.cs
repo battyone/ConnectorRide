@@ -64,7 +64,7 @@ namespace Knapcode.ConnectorRide.Core
                 jsonWriter.WritePropertyName("Version");
                 jsonWriter.WriteValue("3.0.0");
                 jsonWriter.WritePropertyName("StartTime");
-                jsonWriter.WriteValue(DateTimeOffset.UtcNow);
+                jsonWriter.WriteValue(_systemTime.UtcNow);
                 jsonWriter.WritePropertyName("Schedules");
                 jsonWriter.WriteStartArray();
                 
@@ -86,7 +86,7 @@ namespace Knapcode.ConnectorRide.Core
 
                 jsonWriter.WriteEndArray();
                 jsonWriter.WritePropertyName("EndTime");
-                jsonWriter.WriteValue(DateTimeOffset.UtcNow);
+                jsonWriter.WriteValue(_systemTime.UtcNow);
                 jsonWriter.WriteEndObject();
             }
         }

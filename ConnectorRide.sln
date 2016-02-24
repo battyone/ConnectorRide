@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectorRide.Tool", "Conne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectorRide.Web", "ConnectorRide.Web\ConnectorRide.Web.csproj", "{AEF9349D-DF69-4D90-B784-7E40905BB81E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectorRide.Core.Tests", "ConnectorRide.Core.Tests\ConnectorRide.Core.Tests.csproj", "{18326A31-BC82-4C68-BFB9-616BA496A1F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{AEF9349D-DF69-4D90-B784-7E40905BB81E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEF9349D-DF69-4D90-B784-7E40905BB81E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEF9349D-DF69-4D90-B784-7E40905BB81E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18326A31-BC82-4C68-BFB9-616BA496A1F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18326A31-BC82-4C68-BFB9-616BA496A1F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18326A31-BC82-4C68-BFB9-616BA496A1F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18326A31-BC82-4C68-BFB9-616BA496A1F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
