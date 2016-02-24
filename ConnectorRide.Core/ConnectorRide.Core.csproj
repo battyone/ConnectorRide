@@ -49,6 +49,7 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstractions\SystemTime.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="ConnectorRideException.cs" />
     <Compile Include="ScraperModels\Result.cs" />

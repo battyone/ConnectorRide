@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Knapcode.ConnectorRide.Core;
+using Knapcode.ConnectorRide.Core.Abstractions;
 using Knapcode.ConnectorRide.Web.Settings;
 using Knapcode.SocketToMe.Http;
 using Knapcode.ToStorage.Core.AzureBlobStorage;
@@ -37,10 +38,11 @@ namespace Knapcode.ConnectorRide.Web.Services
                 }
 
                 // initialize scraper
+                var systemTime = new SystemTime();
                 var handler = new NetworkHandler();
                 var httpClient = new HttpClient(handler);
                 var connectorClient = new Client(httpClient);
-                var connectorScraper = new Scraper(connectorClient);
+                var connectorScraper = new Scraper(systemTime, connectorClient);
 
                 // scrape
                 var resultStream = new MemoryStream();
