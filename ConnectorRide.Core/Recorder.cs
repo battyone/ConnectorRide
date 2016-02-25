@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Knapcode.ConnectorRide.Core.RecorderModels;
 using Knapcode.ToStorage.Core.AzureBlobStorage;
+using IStorageClient = Knapcode.ToStorage.Core.AzureBlobStorage.IClient;
 
 namespace Knapcode.ConnectorRide.Core
 {
@@ -14,10 +15,12 @@ namespace Knapcode.ConnectorRide.Core
     public class Recorder : IRecorder
     {
         private readonly IScraper _scraper;
+        private readonly IStorageClient _storageClient;
 
-        public Recorder(IScraper scraper)
+        public Recorder(IScraper scraper, IStorageClient storageClient)
         {
             _scraper = scraper;
+            _storageClient = storageClient;
         }
 
         public async Task<UploadResult> RecordLatestAsync(RecordRequest request)
@@ -32,7 +35,6 @@ namespace Knapcode.ConnectorRide.Core
             resultStream.Position = 0;
 
             // initialize storage
-            var storageClient = new ToStorage.Core.AzureBlobStorage.Client();
             var uploadRequest = new UploadRequest
             {
                 Container = request.StorageContainer,
@@ -40,13 +42,14 @@ namespace Knapcode.ConnectorRide.Core
                 PathFormat = request.PathFormat,
                 Stream = resultStream,
                 Trace = TextWriter.Null,
-                UpdateLatest = true
+                UploadDirect = true,
+                UploadLatest = true
             };
 
             // upload
             using (resultStream)
             {
-                return await storageClient.UploadAsync(request.StorageConnectionString, uploadRequest).ConfigureAwait(false);
+                return await _storageClient.UploadAsync(request.StorageConnectionString, uploadRequest).ConfigureAwait(false);
             }
         }
     }

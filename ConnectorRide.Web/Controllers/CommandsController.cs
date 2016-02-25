@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Knapcode.ConnectorRide.Core;
@@ -8,6 +7,8 @@ using Knapcode.ConnectorRide.Core.RecorderModels;
 using Knapcode.ConnectorRide.Web.Settings;
 using Knapcode.ToStorage.Core.AzureBlobStorage;
 using Client = Knapcode.ConnectorRide.Core.Client;
+using StorageClient = Knapcode.ToStorage.Core.AzureBlobStorage.Client;
+using StorageSystemTime = Knapcode.ToStorage.Core.Abstractions.SystemTime;
 
 namespace Knapcode.ConnectorRide.Web.Controllers
 {
@@ -19,7 +20,9 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             var httpClient = new HttpClient();
             var client = new Client(httpClient);
             var scraper = new Scraper(systemTime, client);
-            var recorder = new Recorder(scraper);
+            var storageSystemTime = new StorageSystemTime();
+            var storageClient = new StorageClient(storageSystemTime);
+            var recorder = new Recorder(scraper, storageClient);
             var throttledRecorder = new ThrottledRecorder(systemTime, recorder);
 
             var settings = new ConnectorRideSettings(new SettingsService());
