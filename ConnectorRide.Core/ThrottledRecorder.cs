@@ -7,7 +7,12 @@ using Knapcode.ToStorage.Core.AzureBlobStorage;
 
 namespace Knapcode.ConnectorRide.Core
 {
-    public class ThrottledRecorder
+    public interface IThrottledRecorder
+    {
+        Task<UploadResult> RecordLatestAsync(ThrottledRecordRequest request);
+    }
+
+    public class ThrottledRecorder : IThrottledRecorder
     {
         public static SemaphoreSlim UpdateLock = new SemaphoreSlim(1);
         public static DateTimeOffset LastUpdate = DateTimeOffset.MinValue;

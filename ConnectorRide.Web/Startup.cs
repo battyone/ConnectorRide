@@ -2,6 +2,7 @@
 using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
 using Knapcode.ConnectorRide.Web;
+using Knapcode.ConnectorRide.Web.Controllers;
 using Microsoft.Owin;
 using Newtonsoft.Json;
 using Owin;
@@ -33,9 +34,14 @@ namespace Knapcode.ConnectorRide.Web
             config.Services.Replace(typeof(IExceptionHandler), new ExceptionHandler());
 
             config.Routes.MapHttpRoute(
-                "CommandsUpdate",
+                "Schedules_" + nameof(SchedulesController.UpdateSchedulesAsync),
                 "commands/update",
-                new { controller = "Commands", action = "UpdateSchedulesAsync" });
+                new { controller = "Schedules", action = nameof(SchedulesController.UpdateSchedulesAsync) });
+
+            config.Routes.MapHttpRoute(
+                "Schedules_" + nameof(SchedulesController.GetLatestSchedulesAsync),
+                "schedules",
+                new { controller = "Schedules", action = nameof(SchedulesController.GetLatestSchedulesAsync) });
         }
     }
 }

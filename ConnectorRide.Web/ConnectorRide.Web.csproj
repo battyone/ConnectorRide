@@ -131,7 +131,7 @@
   <ItemGroup>
     <Compile Include="ExceptionHandler.cs" />
     <Compile Include="Settings\ConnectorRideSettings.cs" />
-    <Compile Include="Controllers\CommandsController.cs" />
+    <Compile Include="Controllers\SchedulesController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\SettingsService.cs" />
     <Compile Include="Startup.cs" />

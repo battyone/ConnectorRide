@@ -2,7 +2,9 @@
 using System.Text;
 using System.Threading.Tasks;
 using Knapcode.ConnectorRide.Core.RecorderModels;
+using Knapcode.ConnectorRide.Core.ScraperModels;
 using Knapcode.ToStorage.Core.AzureBlobStorage;
+using Newtonsoft.Json;
 using IStorageClient = Knapcode.ToStorage.Core.AzureBlobStorage.IClient;
 
 namespace Knapcode.ConnectorRide.Core
@@ -10,6 +12,7 @@ namespace Knapcode.ConnectorRide.Core
     public interface IRecorder
     {
         Task<UploadResult> RecordLatestAsync(RecordRequest request);
+        Task<ScrapeResult> GetLatestAsync(RecordRequest request);
     }
 
     public class Recorder : IRecorder
@@ -21,6 +24,23 @@ namespace Knapcode.ConnectorRide.Core
         {
             _scraper = scraper;
             _storageClient = storageClient;
+        }
+
+        public async Task<ScrapeResult> GetLatestAsync(RecordRequest request)
+        {
+            var getLatestRequest = new GetLatestRequest
+            {
+                PathFormat = request.PathFormat,
+                Container = request.StorageContainer,
+                Trace = TextWriter.Null
+            };
+
+            using (var stream = await _storageClient.GetLatestStreamAsync(request.StorageConnectionString, getLatestRequest))
+            using (var reader = new StreamReader(stream))
+            using (var jsonReader = new JsonTextReader(reader))
+            {
+                return new JsonSerializer().Deserialize<ScrapeResult>(jsonReader);
+            }
         }
 
         public async Task<UploadResult> RecordLatestAsync(RecordRequest request)
