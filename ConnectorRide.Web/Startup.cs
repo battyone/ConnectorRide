@@ -34,14 +34,19 @@ namespace Knapcode.ConnectorRide.Web
             config.Services.Replace(typeof(IExceptionHandler), new ExceptionHandler());
 
             config.Routes.MapHttpRoute(
-                "Schedules_" + nameof(SchedulesController.UpdateSchedulesAsync),
+                nameof(SchedulesController) + "_" + nameof(SchedulesController.UpdateSchedulesAsync),
                 "commands/update",
-                new { controller = "Schedules", action = nameof(SchedulesController.UpdateSchedulesAsync) });
+                new { controller = RemoveControllerSuffix(nameof(SchedulesController)), action = nameof(SchedulesController.UpdateSchedulesAsync) });
 
             config.Routes.MapHttpRoute(
-                "Schedules_" + nameof(SchedulesController.GetLatestSchedulesAsync),
+                nameof(SchedulesController) + "_" + nameof(SchedulesController.GetLatestSchedulesAsync),
                 "schedules",
-                new { controller = "Schedules", action = nameof(SchedulesController.GetLatestSchedulesAsync) });
+                new { controller = RemoveControllerSuffix(nameof(SchedulesController)), action = nameof(SchedulesController.GetLatestSchedulesAsync) });
+        }
+
+        private static string RemoveControllerSuffix(string input)
+        {
+            return input.Substring(0, input.Length - "Controller".Length);
         }
     }
 }
