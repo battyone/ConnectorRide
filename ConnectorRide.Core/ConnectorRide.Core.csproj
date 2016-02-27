@@ -94,7 +94,7 @@
     <Compile Include="GtfsModels\Service.cs" />
     <Compile Include="GtfsModels\Date.cs" />
     <Compile Include="GtfsModels\DropOffType.cs" />
-    <Compile Include="GtfsModels\Feed.cs" />
+    <Compile Include="GtfsModels\GtfsFeed.cs" />
     <Compile Include="GtfsModels\LocationType.cs" />
     <Compile Include="GtfsModels\PickupType.cs" />
     <Compile Include="GtfsModels\Route.cs" />

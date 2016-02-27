@@ -9,7 +9,7 @@ namespace Knapcode.ConnectorRide.Core
 {
     public class GtfsConverter
     {
-        public Feed ConvertToFeed(ScrapeResult scrapeResult)
+        public GtfsFeed ConvertToFeed(ScrapeResult scrapeResult)
         {
             var context = new ConversionContext { ScrapeResult = scrapeResult };
 
@@ -28,7 +28,7 @@ namespace Knapcode.ConnectorRide.Core
             ConvertTripsAndStopTimes(context);
 
             // Collect the output data.
-            return new Feed
+            return new GtfsFeed
             {
                 Agencies = new[] { context.Agency },
                 Stops = context.StopAndTableStops.Values.Select(p => p.Stop).ToArray(),

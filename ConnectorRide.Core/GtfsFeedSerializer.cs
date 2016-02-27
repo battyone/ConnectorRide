@@ -14,7 +14,7 @@ namespace Knapcode.ConnectorRide.Core
             _csvSerializer = new GtfsCsvSerializer();
         }
 
-        public async Task SerializeAsync(Feed feed, Stream zipStream)
+        public async Task SerializeAsync(Stream zipStream, GtfsFeed feed)
         {
             using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
             {

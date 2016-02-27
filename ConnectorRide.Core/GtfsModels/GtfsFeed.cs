@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Knapcode.ConnectorRide.Core.GtfsModels
 {
-    public class Feed
+    public class GtfsFeed
     {
         public Agency[] Agencies { get; set; }
         public Stop[] Stops { get; set; }
