@@ -5,13 +5,18 @@ using Knapcode.ConnectorRide.Core.GtfsModels;
 
 namespace Knapcode.ConnectorRide.Core
 {
-    public class GtfsFeedSerializer
+    public interface IGtfsFeedSerializer
     {
-        private readonly GtfsCsvSerializer _csvSerializer;
+        Task SerializeAsync(Stream zipStream, GtfsFeed feed);
+    }
 
-        public GtfsFeedSerializer()
+    public class GtfsFeedSerializer : IGtfsFeedSerializer
+    {
+        private readonly IGtfsCsvSerializer _csvSerializer;
+
+        public GtfsFeedSerializer(IGtfsCsvSerializer csvSerializer)
         {
-            _csvSerializer = new GtfsCsvSerializer();
+            _csvSerializer = csvSerializer;
         }
 
         public async Task SerializeAsync(Stream zipStream, GtfsFeed feed)

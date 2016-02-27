@@ -14,12 +14,13 @@ namespace Knapcode.ConnectorRide.Core.Tests
         {
             // Arrange
             var feed = await TestData.GetGtfsFeedAsync();
-            var serializer = new GtfsFeedSerializer();
+            var csvSerializer = new GtfsCsvSerializer();
+            var target = new GtfsFeedSerializer(csvSerializer);
 
             using (var stream = new MemoryStream())
             {
                 // Act
-                await serializer.SerializeAsync(stream, feed);
+                await target.SerializeAsync(stream, feed);
 
                 // Assert
                 stream.Seek(0, SeekOrigin.Begin);
