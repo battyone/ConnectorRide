@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Knapcode.ConnectorRide.Core.RecorderModels;
@@ -11,6 +13,7 @@ namespace Knapcode.ConnectorRide.Core
 {
     public interface IRecorder
     {
+        ScrapeResult DeserializeScrapeResult(Stream stream);
         Task<UploadResult> RecordLatestAsync(RecordRequest request);
         Task<ScrapeResult> GetLatestAsync(RecordRequest request);
     }
@@ -26,6 +29,15 @@ namespace Knapcode.ConnectorRide.Core
             _storageClient = storageClient;
         }
 
+        public ScrapeResult DeserializeScrapeResult(Stream stream)
+        {
+            using (var reader = new StreamReader(stream))
+            using (var jsonReader = new JsonTextReader(reader))
+            {
+                return new JsonSerializer().Deserialize<ScrapeResult>(jsonReader);
+            }
+        }
+
         public async Task<ScrapeResult> GetLatestAsync(RecordRequest request)
         {
             var getLatestRequest = new GetLatestRequest
@@ -36,10 +48,8 @@ namespace Knapcode.ConnectorRide.Core
             };
 
             using (var stream = await _storageClient.GetLatestStreamAsync(request.StorageConnectionString, getLatestRequest))
-            using (var reader = new StreamReader(stream))
-            using (var jsonReader = new JsonTextReader(reader))
             {
-                return new JsonSerializer().Deserialize<ScrapeResult>(jsonReader);
+                return DeserializeScrapeResult(stream);
             }
         }
 
