@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Knapcode.ConnectorRide.Core.RecorderModels;
 using Knapcode.ConnectorRide.Core.ScraperModels;
 using Knapcode.ToStorage.Core.AzureBlobStorage;
+using Newtonsoft.Json;
 using IStorageClient = Knapcode.ToStorage.Core.AzureBlobStorage.IClient;
 
 namespace Knapcode.ConnectorRide.Core
@@ -46,8 +47,10 @@ namespace Knapcode.ConnectorRide.Core
         {
             // scrape
             var resultStream = new MemoryStream();
-            using (var writer = new StreamWriter(resultStream, new UTF8Encoding(false), 4096, true))
+            using (var textWriter = new StreamWriter(resultStream, new UTF8Encoding(false), 4096, true))
+            using (var jsonWriter = new JsonTextWriter(textWriter))
             {
+                var writer = new JsonScrapeResultWriter(jsonWriter);
                 await _scraper.RealTimeScrapeAsync(writer).ConfigureAwait(false);
             }
 

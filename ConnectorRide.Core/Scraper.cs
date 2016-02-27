@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Knapcode.ConnectorRide.Core.Abstractions;
 using Knapcode.ConnectorRide.Core.ScraperModels;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Schedule = Knapcode.ConnectorRide.Core.ScraperModels.Schedule;
 
 namespace Knapcode.ConnectorRide.Core
 {
     public interface IScraper
     {
         Task<ScrapeResult> ScrapeAsync();
-        Task RealTimeScrapeAsync(TextWriter textWriter);
+        Task RealTimeScrapeAsync(IScrapeResultWriter writer);
     }
 
     public class Scraper : IScraper
@@ -56,40 +53,30 @@ namespace Knapcode.ConnectorRide.Core
             };
         }
         
-        public async Task RealTimeScrapeAsync(TextWriter textWriter)
+        public async Task RealTimeScrapeAsync(IScrapeResultWriter writer)
         {
-            // TODO: extract this to Serializer somehow
-            using (var jsonWriter = new JsonTextWriter(textWriter))
+            writer.WriteStart();
+            writer.WriteVersion(Version);
+            writer.WriteStartTime(_systemTime.UtcNow);
+            writer.WriteStartSchedules();
+
+            var scheduleReferences = await _client.GetScheduleReferencesAsync().ConfigureAwait(false);
+            foreach (var scheduleReference in scheduleReferences)
             {
-                jsonWriter.WriteStartObject();
-                jsonWriter.WritePropertyName("Version");
-                jsonWriter.WriteValue(Version);
-                jsonWriter.WritePropertyName("StartTime");
-                jsonWriter.WriteValue(_systemTime.UtcNow);
-                jsonWriter.WritePropertyName("Schedules");
-                jsonWriter.WriteStartArray();
-                
-                var scheduleReferences = await _client.GetScheduleReferencesAsync().ConfigureAwait(false);
-                foreach (var scheduleReference in scheduleReferences)
-                {
-                    jsonWriter.WriteStartObject();
-                    jsonWriter.WritePropertyName("Name");
-                    var schedule = await _client.GetScheduleAsync(scheduleReference).ConfigureAwait(false);
-                    jsonWriter.WriteValue(schedule.Name);
-                    jsonWriter.WritePropertyName("Table");
-                    JObject.FromObject(schedule.Table).WriteTo(jsonWriter);
+                writer.WriteStartSchedule();
 
-                    jsonWriter.WritePropertyName("Map");
-                    var map = await _client.GetMapAsync(schedule.MapReference).ConfigureAwait(false);
-                    JObject.FromObject(map).WriteTo(jsonWriter);
-                    jsonWriter.WriteEndObject();
-                }
+                var schedule = await _client.GetScheduleAsync(scheduleReference).ConfigureAwait(false);
+                writer.WriteScheduleName(schedule.Name);
+                writer.WriteScheduleTable(schedule.Table);
 
-                jsonWriter.WriteEndArray();
-                jsonWriter.WritePropertyName("EndTime");
-                jsonWriter.WriteValue(_systemTime.UtcNow);
-                jsonWriter.WriteEndObject();
+                var map = await _client.GetMapAsync(schedule.MapReference).ConfigureAwait(false);
+                writer.WriteScheduleMap(map);
+                writer.WriteEndSchedule();
             }
+
+            writer.WriteEndSchedules();
+            writer.WriteEndTime(_systemTime.UtcNow);
+            writer.WriteEnd();
         }
     }
 }

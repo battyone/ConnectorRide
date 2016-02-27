@@ -109,6 +109,8 @@
     <Compile Include="GtfsModels\Trip.cs" />
     <Compile Include="GtfsModels\WheelchairAccessible.cs" />
     <Compile Include="GtfsModels\WheelchairBoarding.cs" />
+    <Compile Include="IScrapeResultWriter.cs" />
+    <Compile Include="JsonScrapeResultWriter.cs" />
     <Compile Include="Recorder.cs" />
     <Compile Include="RecorderModels\RecordRequest.cs" />
     <Compile Include="RecorderModels\ThrottledRecordRequest.cs" />

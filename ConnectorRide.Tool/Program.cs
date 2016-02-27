@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Knapcode.ConnectorRide.Core;
 using Knapcode.ConnectorRide.Core.Abstractions;
 using Knapcode.SocketToMe.Http;
+using Newtonsoft.Json;
 
 namespace Knapcode.ConnectorRide.Tool
 {
@@ -22,9 +23,11 @@ namespace Knapcode.ConnectorRide.Tool
             var httpClient = new HttpClient(handler);
             var connectorClient = new Client(httpClient);
             var connectorScraper = new Scraper(systemTime, connectorClient);
+            var jsonWriter = new JsonTextWriter(Console.Out);
+            var writer = new JsonScrapeResultWriter(jsonWriter);
 
             // scrape
-            await connectorScraper.RealTimeScrapeAsync(Console.Out).ConfigureAwait(false);
+            await connectorScraper.RealTimeScrapeAsync(writer).ConfigureAwait(false);
             Console.WriteLine();
         }
     }

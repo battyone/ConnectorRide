@@ -45,14 +45,16 @@ namespace Knapcode.ConnectorRide.Core.Tests
             client.Setup(x => x.GetMapAsync(scheduleB.MapReference)).ReturnsAsync(mapB);
 
             var target = new Scraper(systemTime.Object, client.Object);
-            var stringWriter = new StringWriter();
+            var textWriter = new StringWriter();
+            var jsonWriter = new JsonTextWriter(textWriter);
+            var writer = new JsonScrapeResultWriter(jsonWriter);
             
             // Act
             var scrapeResult = await target.ScrapeAsync();
-            await target.RealTimeScrapeAsync(stringWriter);
+            await target.RealTimeScrapeAsync(writer);
 
             // Assert
-            var deserialize = JsonConvert.DeserializeObject<ScrapeResult>(stringWriter.ToString());
+            var deserialize = JsonConvert.DeserializeObject<ScrapeResult>(textWriter.ToString());
             deserialize.ShouldBeEquivalentTo(scrapeResult);
         }
 
