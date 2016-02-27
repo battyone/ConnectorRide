@@ -21,6 +21,8 @@ namespace Knapcode.ConnectorRide.Core
 
         public async Task SerializeAsync(Stream zipStream, GtfsFeed feed)
         {
+            await Task.Yield();
+
             using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
             {
                 using (var entryStream = archive.CreateEntry("agency.txt").Open())
