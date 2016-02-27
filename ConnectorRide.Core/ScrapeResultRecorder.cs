@@ -39,6 +39,11 @@ namespace Knapcode.ConnectorRide.Core
 
             using (var stream = await _storageClient.GetLatestStreamAsync(request.StorageConnectionString, getLatestRequest))
             {
+                if (stream == null)
+                {
+                    return null;
+                }
+
                 return await _serializer.DeserializeAsync(stream);
             }
         }

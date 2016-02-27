@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Knapcode.ConnectorRide.Core;
@@ -35,17 +36,25 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             _settings = new ConnectorRideSettings(settingsService);
         }
 
-        public async Task<ScrapeResult> GetLatestSchedulesAsync()
+        public async Task<ScrapeResult> GetLatestScrapeResult()
         {
-            return await _scrapeResultRecorder.GetLatestAsync(GetRecordRequest());
+            var request = GetScrapeResultRecordRequest();
+
+            if (request == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return await _scrapeResultRecorder.GetLatestAsync(request);
         }
 
-        public async Task<UploadResult> UpdateSchedulesAsync()
+        public async Task<UploadResult> UpdateScrapeResultAsync()
         {
-            return await _throttledScrapeResultRecorder.RecordLatestAsync(_settings.SchedulesMaximumScrapeFrequency, GetRecordRequest());
+            var request = GetScrapeResultRecordRequest();
+            return await _throttledScrapeResultRecorder.RecordLatestAsync(_settings.SchedulesMaximumScrapeFrequency, request);
         }
 
-        private RecordRequest GetRecordRequest()
+        private RecordRequest GetScrapeResultRecordRequest()
         {
             return new RecordRequest
             {
