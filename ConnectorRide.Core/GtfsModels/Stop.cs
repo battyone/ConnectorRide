@@ -9,9 +9,9 @@
         public double Lat { get; set; }
         public double Lon { get; set; }
         public string ZoneId { get; set; }
-        public LocationType LocationType { get; set; }
+        public LocationType? LocationType { get; set; }
         public string ParentStation { get; set; }
         public string Timezone { get; set; }
-        public LocationType WheelchairBoarding { get; set; }
+        public LocationType? WheelchairBoarding { get; set; }
     }
 }
