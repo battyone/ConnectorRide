@@ -37,7 +37,7 @@ namespace Knapcode.ConnectorRide.Web.Controllers
 
         public async Task<ScrapeResult> GetLatestSchedulesAsync()
         {
-            return await _recorder.GetLatestAsync(GetRecordRequest());
+            return await _recorder.GetLatestScrapeResultAsync(GetRecordRequest());
         }
 
         public async Task<UploadResult> UpdateSchedulesAsync()

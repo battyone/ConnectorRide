@@ -43,7 +43,7 @@ namespace Knapcode.ConnectorRide.Core
                     throw new ThrottlingException("An update occurred too recently.");
                 }
 
-                var result = await _innerRecorder.RecordLatestAsync(request.Request).ConfigureAwait(false);
+                var result = await _innerRecorder.RecordScrapeResultAsync(request.Request).ConfigureAwait(false);
                 LastUpdate = _systemTime.UtcNow;
                 return result;
             }

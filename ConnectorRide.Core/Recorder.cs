@@ -11,8 +11,8 @@ namespace Knapcode.ConnectorRide.Core
 {
     public interface IRecorder
     {
-        Task<UploadResult> RecordLatestAsync(RecordRequest request);
-        Task<ScrapeResult> GetLatestAsync(RecordRequest request);
+        Task<UploadResult> RecordScrapeResultAsync(RecordRequest request);
+        Task<ScrapeResult> GetLatestScrapeResultAsync(RecordRequest request);
     }
 
     public class Recorder : IRecorder
@@ -28,7 +28,7 @@ namespace Knapcode.ConnectorRide.Core
             _storageClient = storageClient;
         }
         
-        public async Task<ScrapeResult> GetLatestAsync(RecordRequest request)
+        public async Task<ScrapeResult> GetLatestScrapeResultAsync(RecordRequest request)
         {
             var getLatestRequest = new GetLatestRequest
             {
@@ -43,7 +43,7 @@ namespace Knapcode.ConnectorRide.Core
             }
         }
 
-        public async Task<UploadResult> RecordLatestAsync(RecordRequest request)
+        public async Task<UploadResult> RecordScrapeResultAsync(RecordRequest request)
         {
             // scrape
             var resultStream = new MemoryStream();
