@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http.ExceptionHandling;
 using System.Web.Http.Results;
 using Knapcode.ConnectorRide.Core;
+using Knapcode.ConnectorRide.Core.RecorderModels;
 using Newtonsoft.Json;
 
 namespace Knapcode.ConnectorRide.Web

@@ -15,9 +15,9 @@ namespace Knapcode.ConnectorRide.Web.Controllers
 {
     public class SchedulesController : ApiController
     {
-        private readonly ThrottledRecorder _throttledRecorder;
+        private readonly ThrottledScrapeResultRecorder _throttledScrapeResultRecorder;
         private readonly ConnectorRideSettings _settings;
-        private readonly Recorder _recorder;
+        private readonly ScrapeResultRecorder _scrapeResultRecorder;
 
         public SchedulesController()
         {
@@ -28,8 +28,8 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             var serializer = new ScrapeResultSerializer();
             var storageSystemTime = new StorageSystemTime();
             var storageClient = new StorageClient(storageSystemTime);
-            _recorder = new Recorder(scraper, serializer, storageClient);
-            _throttledRecorder = new ThrottledRecorder(systemTime, _recorder);
+            _scrapeResultRecorder = new ScrapeResultRecorder(scraper, serializer, storageClient);
+            _throttledScrapeResultRecorder = new ThrottledScrapeResultRecorder(systemTime, _scrapeResultRecorder);
 
             var settingsService = new SettingsService();
             _settings = new ConnectorRideSettings(settingsService);
@@ -37,17 +37,12 @@ namespace Knapcode.ConnectorRide.Web.Controllers
 
         public async Task<ScrapeResult> GetLatestSchedulesAsync()
         {
-            return await _recorder.GetLatestScrapeResultAsync(GetRecordRequest());
+            return await _scrapeResultRecorder.GetLatestAsync(GetRecordRequest());
         }
 
         public async Task<UploadResult> UpdateSchedulesAsync()
         {
-
-            return await _throttledRecorder.RecordLatestAsync(new ThrottledRecordRequest
-            {
-                MaximumFrequency = _settings.SchedulesMaximumScrapeFrequency,
-                Request = GetRecordRequest()
-            });
+            return await _throttledScrapeResultRecorder.RecordLatestAsync(_settings.SchedulesMaximumScrapeFrequency, GetRecordRequest());
         }
 
         private RecordRequest GetRecordRequest()

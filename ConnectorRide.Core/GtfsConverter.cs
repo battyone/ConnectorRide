@@ -7,7 +7,12 @@ using Schedule = Knapcode.ConnectorRide.Core.ScraperModels.Schedule;
 
 namespace Knapcode.ConnectorRide.Core
 {
-    public class GtfsConverter
+    public interface IGtfsConverter
+    {
+        GtfsFeed ConvertToFeed(ScrapeResult scrapeResult);
+    }
+
+    public class GtfsConverter : IGtfsConverter
     {
         public GtfsFeed ConvertToFeed(ScrapeResult scrapeResult)
         {

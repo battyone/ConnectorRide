@@ -7,26 +7,26 @@ using Knapcode.ToStorage.Core.AzureBlobStorage;
 
 namespace Knapcode.ConnectorRide.Core
 {
-    public interface IThrottledRecorder
+    public interface IThrottledScrapeResultRecorder
     {
-        Task<UploadResult> RecordLatestAsync(ThrottledRecordRequest request);
+        Task<UploadResult> RecordLatestAsync(TimeSpan maximumFrequency, RecordRequest request);
     }
 
-    public class ThrottledRecorder : IThrottledRecorder
+    public class ThrottledScrapeResultRecorder : IThrottledScrapeResultRecorder
     {
         public static SemaphoreSlim UpdateLock = new SemaphoreSlim(1);
         public static DateTimeOffset LastUpdate = DateTimeOffset.MinValue;
 
         private readonly ISystemTime _systemTime;
-        private readonly IRecorder _innerRecorder;
+        private readonly IScrapeResultRecorder _innerRecorder;
 
-        public ThrottledRecorder(ISystemTime systemTime, IRecorder innerRecorder)
+        public ThrottledScrapeResultRecorder(ISystemTime systemTime, IScrapeResultRecorder innerRecorder)
         {
             _systemTime = systemTime;
             _innerRecorder = innerRecorder;
         }
 
-        public async Task<UploadResult> RecordLatestAsync(ThrottledRecordRequest request)
+        public async Task<UploadResult> RecordLatestAsync(TimeSpan maximumFrequency, RecordRequest request)
         {
             // mutex
             var acquired = await UpdateLock.WaitAsync(0).ConfigureAwait(false);
@@ -38,12 +38,12 @@ namespace Knapcode.ConnectorRide.Core
             try
             {
                 // throttling
-                if (_systemTime.UtcNow - LastUpdate < request.MaximumFrequency)
+                if (_systemTime.UtcNow - LastUpdate < maximumFrequency)
                 {
                     throw new ThrottlingException("An update occurred too recently.");
                 }
 
-                var result = await _innerRecorder.RecordScrapeResultAsync(request.Request).ConfigureAwait(false);
+                var result = await _innerRecorder.RecordAsync(request).ConfigureAwait(false);
                 LastUpdate = _systemTime.UtcNow;
                 return result;
             }

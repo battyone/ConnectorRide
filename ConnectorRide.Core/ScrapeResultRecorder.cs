@@ -9,26 +9,26 @@ using IStorageClient = Knapcode.ToStorage.Core.AzureBlobStorage.IClient;
 
 namespace Knapcode.ConnectorRide.Core
 {
-    public interface IRecorder
+    public interface IScrapeResultRecorder
     {
-        Task<UploadResult> RecordScrapeResultAsync(RecordRequest request);
-        Task<ScrapeResult> GetLatestScrapeResultAsync(RecordRequest request);
+        Task<UploadResult> RecordAsync(RecordRequest request);
+        Task<ScrapeResult> GetLatestAsync(RecordRequest request);
     }
 
-    public class Recorder : IRecorder
+    public class ScrapeResultRecorder : IScrapeResultRecorder
     {
         private readonly IScraper _scraper;
         private readonly IScrapeResultSerializer _serializer;
         private readonly IStorageClient _storageClient;
 
-        public Recorder(IScraper scraper, IScrapeResultSerializer serializer, IStorageClient storageClient)
+        public ScrapeResultRecorder(IScraper scraper, IScrapeResultSerializer serializer, IStorageClient storageClient)
         {
             _scraper = scraper;
             _serializer = serializer;
             _storageClient = storageClient;
         }
         
-        public async Task<ScrapeResult> GetLatestScrapeResultAsync(RecordRequest request)
+        public async Task<ScrapeResult> GetLatestAsync(RecordRequest request)
         {
             var getLatestRequest = new GetLatestRequest
             {
@@ -43,7 +43,7 @@ namespace Knapcode.ConnectorRide.Core
             }
         }
 
-        public async Task<UploadResult> RecordScrapeResultAsync(RecordRequest request)
+        public async Task<UploadResult> RecordAsync(RecordRequest request)
         {
             // scrape
             var resultStream = new MemoryStream();

@@ -90,6 +90,7 @@
     <Compile Include="ConnectorRideException.cs" />
     <Compile Include="GtfsConverter.cs" />
     <Compile Include="GtfsCsvSerializer.cs" />
+    <Compile Include="GtfsFeedRecorder.cs" />
     <Compile Include="GtfsFeedSerializer.cs" />
     <Compile Include="GtfsModels\Agency.cs" />
     <Compile Include="GtfsModels\BikesAllowed.cs" />
@@ -111,9 +112,8 @@
     <Compile Include="GtfsModels\WheelchairBoarding.cs" />
     <Compile Include="IScrapeResultWriter.cs" />
     <Compile Include="JsonScrapeResultWriter.cs" />
-    <Compile Include="Recorder.cs" />
+    <Compile Include="ScrapeResultRecorder.cs" />
     <Compile Include="RecorderModels\RecordRequest.cs" />
-    <Compile Include="RecorderModels\ThrottledRecordRequest.cs" />
     <Compile Include="ScrapeResultSerializer.cs" />
     <Compile Include="ScraperModels\ScrapeResult.cs" />
     <Compile Include="ScraperModels\Schedule.cs" />
@@ -128,8 +128,8 @@
     <Compile Include="ClientModels\TableStop.cs" />
     <Compile Include="ClientModels\TableStopTime.cs" />
     <Compile Include="ClientModels\TableTrip.cs" />
-    <Compile Include="ThrottledRecorder.cs" />
-    <Compile Include="ThrottlingException.cs" />
+    <Compile Include="ThrottledScrapeResultRecorder.cs" />
+    <Compile Include="RecorderModels\ThrottlingException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
