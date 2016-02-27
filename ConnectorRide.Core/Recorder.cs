@@ -17,10 +17,10 @@ namespace Knapcode.ConnectorRide.Core
     public class Recorder : IRecorder
     {
         private readonly IScraper _scraper;
-        private readonly ISerializer _serializer;
+        private readonly IScrapeResultSerializer _serializer;
         private readonly IStorageClient _storageClient;
 
-        public Recorder(IScraper scraper, ISerializer serializer, IStorageClient storageClient)
+        public Recorder(IScraper scraper, IScrapeResultSerializer serializer, IStorageClient storageClient)
         {
             _scraper = scraper;
             _serializer = serializer;
@@ -38,7 +38,7 @@ namespace Knapcode.ConnectorRide.Core
 
             using (var stream = await _storageClient.GetLatestStreamAsync(request.StorageConnectionString, getLatestRequest))
             {
-                return await _serializer.DeserializeScrapeResultAsync(stream);
+                return await _serializer.DeserializeAsync(stream);
             }
         }
 

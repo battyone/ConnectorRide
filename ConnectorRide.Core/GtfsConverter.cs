@@ -94,7 +94,7 @@ namespace Knapcode.ConnectorRide.Core
                         ArrivalTime = time,
                         DepartureTime = time,
                         StopId = stopAndTableStop.Stop.Id,
-                        Sequence = stopSequence,
+                        StopSequence = stopSequence,
                         PickupType = pickupType,
                         DropOffType = dropOffType
                     });
@@ -110,7 +110,6 @@ namespace Knapcode.ConnectorRide.Core
             {
                 Name = "Microsoft Connector",
                 Url = "https://www.connectorride.mobi/",
-                Email = "conector@microsoft.com",
                 Phone = "425-502-5035",
                 Timezone = "America/Los_Angeles"
             };
@@ -175,8 +174,7 @@ namespace Knapcode.ConnectorRide.Core
                     {
                         Stop = new Stop
                         {
-                            Name = tableStop.Name,
-                            LocationType = tableStop.IsHub ? LocationType.Station : LocationType.Stop
+                            Name = tableStop.Name
                         },
                         TableStop = tableStop
                     };

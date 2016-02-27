@@ -5,14 +5,14 @@ using Newtonsoft.Json;
 
 namespace Knapcode.ConnectorRide.Core
 {
-    public interface ISerializer
+    public interface IScrapeResultSerializer
     {
-        Task<ScrapeResult> DeserializeScrapeResultAsync(Stream stream);
+        Task<ScrapeResult> DeserializeAsync(Stream stream);
     }
 
-    public class Serializer : ISerializer
+    public class ScrapeResultSerializer : IScrapeResultSerializer
     {
-        public Task<ScrapeResult> DeserializeScrapeResultAsync(Stream stream)
+        public Task<ScrapeResult> DeserializeAsync(Stream stream)
         {
             using (var reader = new StreamReader(stream))
             using (var jsonReader = new JsonTextReader(reader))
