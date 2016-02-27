@@ -25,9 +25,10 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             var httpClient = new HttpClient();
             var client = new Client(httpClient);
             var scraper = new Scraper(systemTime, client);
+            var serializer = new Serializer();
             var storageSystemTime = new StorageSystemTime();
             var storageClient = new StorageClient(storageSystemTime);
-            _recorder = new Recorder(scraper, storageClient);
+            _recorder = new Recorder(scraper, serializer, storageClient);
             _throttledRecorder = new ThrottledRecorder(systemTime, _recorder);
 
             var settingsService = new SettingsService();

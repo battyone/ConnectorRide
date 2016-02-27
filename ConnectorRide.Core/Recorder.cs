@@ -1,19 +1,15 @@
-﻿using System;
-using System.IO;
-using System.Net.Http;
+﻿using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Knapcode.ConnectorRide.Core.RecorderModels;
 using Knapcode.ConnectorRide.Core.ScraperModels;
 using Knapcode.ToStorage.Core.AzureBlobStorage;
-using Newtonsoft.Json;
 using IStorageClient = Knapcode.ToStorage.Core.AzureBlobStorage.IClient;
 
 namespace Knapcode.ConnectorRide.Core
 {
     public interface IRecorder
     {
-        ScrapeResult DeserializeScrapeResult(Stream stream);
         Task<UploadResult> RecordLatestAsync(RecordRequest request);
         Task<ScrapeResult> GetLatestAsync(RecordRequest request);
     }
@@ -21,23 +17,16 @@ namespace Knapcode.ConnectorRide.Core
     public class Recorder : IRecorder
     {
         private readonly IScraper _scraper;
+        private readonly ISerializer _serializer;
         private readonly IStorageClient _storageClient;
 
-        public Recorder(IScraper scraper, IStorageClient storageClient)
+        public Recorder(IScraper scraper, ISerializer serializer, IStorageClient storageClient)
         {
             _scraper = scraper;
+            _serializer = serializer;
             _storageClient = storageClient;
         }
-
-        public ScrapeResult DeserializeScrapeResult(Stream stream)
-        {
-            using (var reader = new StreamReader(stream))
-            using (var jsonReader = new JsonTextReader(reader))
-            {
-                return new JsonSerializer().Deserialize<ScrapeResult>(jsonReader);
-            }
-        }
-
+        
         public async Task<ScrapeResult> GetLatestAsync(RecordRequest request)
         {
             var getLatestRequest = new GetLatestRequest
@@ -49,7 +38,7 @@ namespace Knapcode.ConnectorRide.Core
 
             using (var stream = await _storageClient.GetLatestStreamAsync(request.StorageConnectionString, getLatestRequest))
             {
-                return DeserializeScrapeResult(stream);
+                return await _serializer.DeserializeScrapeResultAsync(stream);
             }
         }
 

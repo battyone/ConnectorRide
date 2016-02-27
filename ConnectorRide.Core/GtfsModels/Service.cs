@@ -1,8 +1,8 @@
 ﻿namespace Knapcode.ConnectorRide.Core.GtfsModels
 {
-    public class Calendar
+    public class Service
     {
-        public string ServiceId { get; set; }
+        public string Id { get; set; }
         public bool Monday { get; set; }
         public bool Tuesday { get; set; }
         public bool Wednesday { get; set; }

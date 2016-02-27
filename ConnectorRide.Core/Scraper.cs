@@ -58,6 +58,7 @@ namespace Knapcode.ConnectorRide.Core
         
         public async Task RealTimeScrapeAsync(TextWriter textWriter)
         {
+            // TODO: extract this to Serializer somehow
             using (var jsonWriter = new JsonTextWriter(textWriter))
             {
                 jsonWriter.WriteStartObject();

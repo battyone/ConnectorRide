@@ -81,11 +81,13 @@
     <Compile Include="Abstractions\SystemTime.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="ConnectorRideException.cs" />
+    <Compile Include="GtfsConverter.cs" />
     <Compile Include="GtfsModels\Agency.cs" />
     <Compile Include="GtfsModels\BikesAllowed.cs" />
-    <Compile Include="GtfsModels\Calendar.cs" />
+    <Compile Include="GtfsModels\Service.cs" />
     <Compile Include="GtfsModels\Date.cs" />
     <Compile Include="GtfsModels\DropOffType.cs" />
+    <Compile Include="GtfsModels\Feed.cs" />
     <Compile Include="GtfsModels\LocationType.cs" />
     <Compile Include="GtfsModels\PickupType.cs" />
     <Compile Include="GtfsModels\Route.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="Recorder.cs" />
     <Compile Include="RecorderModels\RecordRequest.cs" />
     <Compile Include="RecorderModels\ThrottledRecordRequest.cs" />
+    <Compile Include="Serializer.cs" />
     <Compile Include="ScraperModels\ScrapeResult.cs" />
     <Compile Include="ScraperModels\Schedule.cs" />
     <Compile Include="ClientModels\MapReference.cs" />
