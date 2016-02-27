@@ -54,6 +54,11 @@ namespace Knapcode.ConnectorRide.Core
                 {
                     _csvSerializer.SerializeCalendar(entryStream, feed.Calendar);
                 }
+
+                using (var entryStream = archive.CreateEntry("shapes.txt").Open())
+                {
+                    _csvSerializer.SerializeShapes(entryStream, feed.Shapes);
+                }
             }
         }
     }

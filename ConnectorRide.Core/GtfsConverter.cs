@@ -25,7 +25,8 @@ namespace Knapcode.ConnectorRide.Core
             // Convert the scrape models to GTFS models.
             ConvertStops(context);
             ConvertRoutes(context);
-            ConvertTripsAndStopTimes(context);
+            ConvertShapes(context);
+            ConvertTripsThenStopTimes(context);
 
             // Collect the output data.
             return new GtfsFeed
@@ -35,23 +36,24 @@ namespace Knapcode.ConnectorRide.Core
                 Routes = context.Routes.Values.ToArray(),
                 Trips = context.Trips.ToArray(),
                 StopTimes = context.StopTimes.ToArray(),
-                Calendar = new[] { context.Service }
+                Calendar = new[] { context.Service },
+                Shapes = context.ShapePoints.ToArray()
             };
         }
 
-        private void ConvertTripsAndStopTimes(ConversionContext context)
+        private void ConvertTripsThenStopTimes(ConversionContext context)
         {
             context.Trips = new List<Trip>();
             context.StopTimes = new List<StopTime>();
 
             foreach (var pair in context.SchedulePairs)
             {
-                ConvertTripAndStopTimes(context, pair.Name, pair.Am, Period.Am);
-                ConvertTripAndStopTimes(context, pair.Name, pair.Pm, Period.Pm);
+                ConvertTripThenStopTimes(context, pair.Name, pair.Am, Period.Am);
+                ConvertTripThenStopTimes(context, pair.Name, pair.Pm, Period.Pm);
             }
         }
 
-        private void ConvertTripAndStopTimes(ConversionContext context, string name, Schedule schedule, Period period)
+        private void ConvertTripThenStopTimes(ConversionContext context, string name, Schedule schedule, Period period)
         {
             foreach (var tableTrip in schedule.Table.Trips)
             {
@@ -63,7 +65,8 @@ namespace Knapcode.ConnectorRide.Core
                     RouteId = context.Routes[name].Id,
                     ServiceId = context.Service.Id,
                     Id = tripId,
-                    DirectionId = period == Period.Pm
+                    DirectionId = period == Period.Pm,
+                    ShapeId = context.ShapeIds[schedule]
                 });
 
                 // add the trip's stop times
@@ -94,7 +97,7 @@ namespace Knapcode.ConnectorRide.Core
                         ArrivalTime = time,
                         DepartureTime = time,
                         StopId = stopAndTableStop.Stop.Id,
-                        StopSequence = stopSequence,
+                        Sequence = stopSequence,
                         PickupType = pickupType,
                         DropOffType = dropOffType
                     });
@@ -192,6 +195,38 @@ namespace Knapcode.ConnectorRide.Core
             }
         }
 
+        private void ConvertShapes(ConversionContext context)
+        {
+            context.ShapeIds = new Dictionary<Schedule, string>();
+            context.ShapePoints = new List<ShapePoint>();
+
+            foreach (var pair in context.SchedulePairs)
+            {
+                ConvertShapes(context, pair.Am);
+                ConvertShapes(context, pair.Pm);
+            }
+        }
+
+        private void ConvertShapes(ConversionContext context, Schedule schedule)
+        {
+            string shapeId = context.ShapeIds.Count.ToString();
+            context.ShapeIds.Add(schedule, shapeId);
+
+            uint sequence = 0;
+            foreach (var location in schedule.Map.Polyline.MapWayPoints)
+            {
+                context.ShapePoints.Add(new ShapePoint
+                {
+                    ShapeId = shapeId,
+                    Lat = location.Latitude,
+                    Lon = location.Longitude,
+                    Sequence = sequence
+                });
+
+                sequence++;
+            }
+        }
+
         private void InitializeSchedulePairs(ConversionContext context)
         {
             var nameGroups = context.ScrapeResult
@@ -250,6 +285,8 @@ namespace Knapcode.ConnectorRide.Core
             public List<SchedulePair> SchedulePairs { get; set; }
             public Agency Agency { get; set; }
             public Service Service { get; set; }
+            public Dictionary<Schedule, string> ShapeIds { get; set; }
+            public List<ShapePoint> ShapePoints { get; set; }
             public Dictionary<string, StopAndTableStop> StopAndTableStops { get; set; }
             public Dictionary<string, Route> Routes { get; set; } 
             public List<Trip> Trips { get; set; }

@@ -101,6 +101,7 @@
     <Compile Include="GtfsModels\PickupType.cs" />
     <Compile Include="GtfsModels\Route.cs" />
     <Compile Include="GtfsModels\RouteType.cs" />
+    <Compile Include="GtfsModels\ShapePoint.cs" />
     <Compile Include="GtfsModels\Stop.cs" />
     <Compile Include="GtfsModels\StopTime.cs" />
     <Compile Include="GtfsModels\Time.cs" />

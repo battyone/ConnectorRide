@@ -15,6 +15,7 @@ namespace Knapcode.ConnectorRide.Core
         void SerializeTrips(Stream stream, Trip[] records);
         void SerializeCalendar(Stream stream, Service[] records);
         void SerializeStopTimes(Stream stream, StopTime[] records);
+        void SerializeShapes(Stream stream, ShapePoint[] records);
     }
 
     public class GtfsCsvSerializer : IGtfsCsvSerializer
@@ -96,6 +97,7 @@ namespace Knapcode.ConnectorRide.Core
                     csvWriter.WriteField("service_id");
                     csvWriter.WriteField("trip_id");
                     csvWriter.WriteField("direction_id");
+                    csvWriter.WriteField("shape_id");
                 },
                 (csvWriter, record) =>
                 {
@@ -103,6 +105,7 @@ namespace Knapcode.ConnectorRide.Core
                     csvWriter.WriteField(record.ServiceId);
                     csvWriter.WriteField(record.Id);
                     csvWriter.WriteField(record.DirectionId.HasValue ? SerializeBoolean(record.DirectionId.Value) : string.Empty);
+                    csvWriter.WriteField(record.ShapeId);
                 });
         }
 
@@ -160,9 +163,30 @@ namespace Knapcode.ConnectorRide.Core
                     csvWriter.WriteField(SerializeTime(record.ArrivalTime));
                     csvWriter.WriteField(SerializeTime(record.DepartureTime));
                     csvWriter.WriteField(record.StopId);
-                    csvWriter.WriteField(record.StopSequence);
+                    csvWriter.WriteField(record.Sequence);
                     csvWriter.WriteField((int?) record.PickupType);
                     csvWriter.WriteField((int?) record.DropOffType);
+                });
+        }
+
+        public void SerializeShapes(Stream stream, ShapePoint[] records)
+        {
+            SerializeCsv(
+                stream,
+                records,
+                csvWriter =>
+                {
+                    csvWriter.WriteField("shape_id");
+                    csvWriter.WriteField("shape_pt_lat");
+                    csvWriter.WriteField("shape_pt_lon");
+                    csvWriter.WriteField("shape_pt_sequence");
+                },
+                (csvWriter, record) =>
+                {
+                    csvWriter.WriteField(record.ShapeId);
+                    csvWriter.WriteField(record.Lat);
+                    csvWriter.WriteField(record.Lon);
+                    csvWriter.WriteField(record.Sequence);
                 });
         }
 

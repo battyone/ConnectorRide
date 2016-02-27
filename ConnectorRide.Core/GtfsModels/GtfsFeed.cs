@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Knapcode.ConnectorRide.Core.GtfsModels
 {
     public class GtfsFeed
@@ -10,5 +8,6 @@ namespace Knapcode.ConnectorRide.Core.GtfsModels
         public Trip[] Trips { get; set; }
         public StopTime[] StopTimes { get; set; }
         public Service[] Calendar { get; set; }
+        public ShapePoint[] Shapes { get; set; }
     }
 }
