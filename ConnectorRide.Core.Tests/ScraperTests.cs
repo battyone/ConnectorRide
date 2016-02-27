@@ -27,13 +27,13 @@ namespace Knapcode.ConnectorRide.Core.Tests
                 .Returns(utcNowA)
                 .Returns(utcNowB);
 
-            var scheduleReferenceA = BuildScheduleReference("A");
-            var scheduleA = BuildSchedule("A");
-            var mapA = BuildMap("A");
+            var scheduleReferenceA = BuildScheduleReference(1);
+            var scheduleA = BuildSchedule(1);
+            var mapA = BuildMap(1);
             
-            var scheduleReferenceB = BuildScheduleReference("B");
-            var scheduleB = BuildSchedule("B");
-            var mapB = BuildMap("B");
+            var scheduleReferenceB = BuildScheduleReference(2);
+            var scheduleB = BuildSchedule(2);
+            var mapB = BuildMap(2);
 
             var client = new Mock<IClient>();
             client.Setup(x => x.GetScheduleReferencesAsync()).ReturnsAsync(new []{ scheduleReferenceA, scheduleReferenceB });
@@ -56,21 +56,21 @@ namespace Knapcode.ConnectorRide.Core.Tests
             deserialize.ShouldBeEquivalentTo(scrapeResult);
         }
 
-        private ScheduleReference BuildScheduleReference(string name)
+        private ScheduleReference BuildScheduleReference(int id)
         {
-            return new ScheduleReference {Href = BuildName(nameof(ScheduleReference), name)};
+            return new ScheduleReference {Href = BuildName(nameof(ScheduleReference), id) };
         }
 
-        public ClientModels.Schedule BuildSchedule(string name)
+        public ClientModels.Schedule BuildSchedule(int id)
         {
             return new ClientModels.Schedule
             {
-                Name = BuildName(nameof(ClientModels.Schedule), name),
+                Name = BuildName(nameof(ClientModels.Schedule), id),
                 Table = new Table
                 {
                     Stops = new[]
                     {
-                        new TableStop {Name = BuildName(nameof(TableStop), name)}
+                        new TableStop {Name = BuildName(nameof(TableStop), id)}
                     },
                     Trips = new[]
                     {
@@ -80,7 +80,7 @@ namespace Knapcode.ConnectorRide.Core.Tests
                             {
                                 new TableStopTime
                                 {
-                                    StopName = BuildName(nameof(TableStopTime), name)
+                                    StopName = BuildName(nameof(TableStopTime), id)
                                 }
                             }
                         },
@@ -88,23 +88,30 @@ namespace Knapcode.ConnectorRide.Core.Tests
                 },
                 MapReference = new MapReference
                 {
-                    Href = BuildName(nameof(MapReference), name)
+                    Href = BuildName(nameof(MapReference), id)
                 }
             };
         }
 
-        private Map BuildMap(string name)
+        private Map BuildMap(int id)
         {
             return new Map
             {
                 Stops = new[]
                 {
-                    new MapStop {Name = BuildName(nameof(Map), name)}
+                    new MapStop {Name = BuildName(nameof(Map), id)},
+                },
+                Polyline = new Polyline
+                {
+                    MapWayPoints = new[]
+                    {
+                        new Location {Latitude = id}
+                    }
                 }
             };
         }
 
-        private string BuildName(params string[] pieces)
+        private string BuildName(params object[] pieces)
         {
             return string.Join(string.Empty, pieces);
         }

@@ -17,7 +17,7 @@ namespace Knapcode.ConnectorRide.Core
 
     public class Scraper : IScraper
     {
-        private const string Version = "3.0.0";
+        private const string Version = "3.1.0";
         private readonly ISystemTime _systemTime;
         private readonly IClient _client;
 
@@ -63,7 +63,7 @@ namespace Knapcode.ConnectorRide.Core
             {
                 jsonWriter.WriteStartObject();
                 jsonWriter.WritePropertyName("Version");
-                jsonWriter.WriteValue("3.0.0");
+                jsonWriter.WriteValue(Version);
                 jsonWriter.WritePropertyName("StartTime");
                 jsonWriter.WriteValue(_systemTime.UtcNow);
                 jsonWriter.WritePropertyName("Schedules");

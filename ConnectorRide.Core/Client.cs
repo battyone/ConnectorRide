@@ -29,6 +29,10 @@ namespace Knapcode.ConnectorRide.Core
             @"(?<Hour>\d+):(?<Minute>\d+) (?<Period>AM|PM)",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        private static readonly Regex PolylineRegex = new Regex(
+            @"[^\w]+mapline\s*=\s*(?<Start>\{)",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
         private static readonly Regex StopsRegex = new Regex(
             @"[^\w]+stops\s*=\s*(?<Start>\[)",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -77,24 +81,38 @@ namespace Knapcode.ConnectorRide.Core
             // get the map page
             var mapDocument = await _lazyContext.Value.OpenAsync(reference.Href).ConfigureAwait(false);
 
+            // extract the polyline
+            var polylineScript = mapDocument
+                .QuerySelectorAll("script")
+                .OfType<IHtmlScriptElement>()
+                .Select(x => new { Element = x, Match = PolylineRegex.Match(x.Text) })
+                .FirstOrDefault(x => x.Match.Success);
+
+            if (polylineScript == null)
+            {
+                throw new ConnectorRideException($"The polyline data could not be found on the schedule map page: {reference.Href}");
+            }
+            
+            var polyline = ExtractObject<Polyline>(polylineScript.Element.Text, polylineScript.Match.Groups["Start"].Index);
+
             // extract the stops
-            var mapScript = mapDocument
+            var stopsScript = mapDocument
                 .QuerySelectorAll("script")
                 .OfType<IHtmlScriptElement>()
                 .Select(x => new { Element = x, Match = StopsRegex.Match(x.Text) })
                 .FirstOrDefault(x => x.Match.Success);
 
-            if (mapScript == null)
+            if (stopsScript == null)
             {
-                throw new ConnectorRideException($"The map data could not be found on the schedule map page: {reference.Href}");
+                throw new ConnectorRideException($"The stop data could not be found on the schedule map page: {reference.Href}");
             }
-
-            // extract the stops
-            var stops = ExtractMapStops(mapScript.Element.Text, mapScript.Match.Groups["Start"].Index);
+            
+            var stops = ExtractObject<MapStop[]>(stopsScript.Element.Text, stopsScript.Match.Groups["Start"].Index);
 
             return new Map
             {
-                Stops = stops
+                Stops = stops,
+                Polyline = polyline
             };
         }
 
@@ -196,15 +214,13 @@ namespace Knapcode.ConnectorRide.Core
             return new MapReference {Href = mapLink.Href};
         }
 
-        private MapStop[] ExtractMapStops(string input, int offset)
+        private T ExtractObject<T>(string javaScript, int offset)
         {
-            var textReader = new StringReader(input.Substring(offset));
+            var textReader = new StringReader(javaScript.Substring(offset));
             var jsonReader = new JsonTextReader(textReader);
             var token = JToken.ReadFrom(jsonReader);
 
-            var stops = token.ToObject<MapStop[]>();
-
-            return stops;
+            return token.ToObject<T>();
         }
 
         private IBrowsingContext GetContext()

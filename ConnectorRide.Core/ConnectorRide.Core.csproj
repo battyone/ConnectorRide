@@ -85,6 +85,8 @@
   <ItemGroup>
     <Compile Include="Abstractions\SystemTime.cs" />
     <Compile Include="Client.cs" />
+    <Compile Include="ClientModels\Location.cs" />
+    <Compile Include="ClientModels\Polyline.cs" />
     <Compile Include="ConnectorRideException.cs" />
     <Compile Include="GtfsConverter.cs" />
     <Compile Include="GtfsCsvSerializer.cs" />
