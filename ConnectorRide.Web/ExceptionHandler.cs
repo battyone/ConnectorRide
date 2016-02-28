@@ -13,9 +13,15 @@ namespace Knapcode.ConnectorRide.Web
 {
     public class ExceptionHandler : IExceptionHandler
     {
+        private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings
+        {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            Formatting = Formatting.Indented
+        };
+
         public Task HandleAsync(ExceptionHandlerContext context, CancellationToken cancellationToken)
         {
-            var content = JsonConvert.SerializeObject(context.Exception, Formatting.Indented);
+            var content = JsonConvert.SerializeObject(context.Exception, JsonSerializerSettings);
             var response = new HttpResponseMessage
             {
                 Content = new StringContent(content, Encoding.UTF8, "application/json"),
