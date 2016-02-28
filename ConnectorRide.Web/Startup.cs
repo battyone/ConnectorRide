@@ -39,9 +39,19 @@ namespace Knapcode.ConnectorRide.Web
                 new { controller = RemoveControllerSuffix(nameof(SchedulesController)), action = nameof(SchedulesController.UpdateScrapeResultAsync) });
 
             config.Routes.MapHttpRoute(
-                nameof(SchedulesController) + "_" + nameof(SchedulesController.GetLatestScrapeResult),
+                nameof(SchedulesController) + "_" + nameof(SchedulesController.UpdateGtfsFeedArchiveAsync),
+                "commands/update-gtfs",
+                new { controller = RemoveControllerSuffix(nameof(SchedulesController)), action = nameof(SchedulesController.UpdateGtfsFeedArchiveAsync) });
+
+            config.Routes.MapHttpRoute(
+                nameof(SchedulesController) + "_" + nameof(SchedulesController.GetLatestScrapeResultAsync),
                 "schedules",
-                new { controller = RemoveControllerSuffix(nameof(SchedulesController)), action = nameof(SchedulesController.GetLatestScrapeResult) });
+                new { controller = RemoveControllerSuffix(nameof(SchedulesController)), action = nameof(SchedulesController.GetLatestScrapeResultAsync) });
+
+            config.Routes.MapHttpRoute(
+                nameof(SchedulesController) + "_" + nameof(SchedulesController.GetLatestGtfsFeedArchiveAsync),
+                "gtfs",
+                new { controller = RemoveControllerSuffix(nameof(SchedulesController)), action = nameof(SchedulesController.GetLatestGtfsFeedArchiveAsync) });
         }
 
         private static string RemoveControllerSuffix(string input)
