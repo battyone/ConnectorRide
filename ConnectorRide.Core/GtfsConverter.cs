@@ -38,8 +38,8 @@ namespace Knapcode.ConnectorRide.Core
             return new GtfsFeed
             {
                 Agencies = new[] { context.Agency },
-                Stops = context.StopAndTableStops.Values.Select(p => p.Stop).ToArray(),
-                Routes = context.Routes.Values.ToArray(),
+                Stops = context.StopNames.Select(x => context.StopAndTableStops[x].Stop).ToArray(),
+                Routes = context.RouteNames.Select(x => context.Routes[x]).ToArray(),
                 Trips = context.Trips.ToArray(),
                 StopTimes = context.StopTimes.ToArray(),
                 Calendar = new[] { context.Service },
@@ -150,50 +150,50 @@ namespace Knapcode.ConnectorRide.Core
 
         private void ConvertRoutes(ConversionContext context)
         {
-            var routes = new Dictionary<string, Route>();
+            context.Routes = new Dictionary<string, Route>();
+            context.RouteNames = new List<string>();
 
             foreach (var pair in context.SchedulePairs)
             {
                 var route = new Route
                 {
-                    Id = routes.Count.ToString(),
+                    Id = context.Routes.Count.ToString(),
                     LongName = pair.Name,
                     Type = RouteType.Bus
                 };
 
-                routes.Add(pair.Name, route);
+                context.Routes.Add(pair.Name, route);
+                context.RouteNames.Add(pair.Name);
             }
-
-            context.Routes = routes;
         }
 
         private void ConvertStops(ConversionContext context)
         {
-            var stopAndTableStops = new Dictionary<string, StopAndTableStop>();
+            context.StopAndTableStops = new Dictionary<string, StopAndTableStop>();
+            context.StopNames = new List<string>();
+
             foreach (var pair in context.SchedulePairs)
             {
                 if (pair.Am != null)
                 {
-                    ConvertStops(stopAndTableStops, pair.Am);
+                    ConvertStops(context, pair.Am);
                 }
 
                 if (pair.Pm != null)
                 {
-                    ConvertStops(stopAndTableStops, pair.Pm);
+                    ConvertStops(context, pair.Pm);
                 }
             }
-
-            context.StopAndTableStops = stopAndTableStops;
         }
 
-        private void ConvertStops(Dictionary<string, StopAndTableStop> stops, Schedule schedule)
+        private void ConvertStops(ConversionContext context, Schedule schedule)
         {
             foreach (var tableStop in schedule.Table.Stops)
             {
                 StopAndTableStop stopAndTableStop;
-                if (!stops.TryGetValue(tableStop.Name, out stopAndTableStop))
+                if (!context.StopAndTableStops.TryGetValue(tableStop.Name, out stopAndTableStop))
                 {
-                    stops[tableStop.Name] = new StopAndTableStop
+                    context.StopAndTableStops[tableStop.Name] = new StopAndTableStop
                     {
                         Stop = new Stop
                         {
@@ -201,12 +201,14 @@ namespace Knapcode.ConnectorRide.Core
                         },
                         TableStop = tableStop
                     };
+
+                    context.StopNames.Add(tableStop.Name);
                 }
             }
 
             foreach (var mapStop in schedule.Map.Stops)
             {
-                var stopAndTableStop = stops[mapStop.Name];
+                var stopAndTableStop = context.StopAndTableStops[mapStop.Name];
 
                 stopAndTableStop.Stop.Id = mapStop.Id.ToString();
                 stopAndTableStop.Stop.Desc = string.Join(", ", new[] {mapStop.Address, mapStop.City, mapStop.ZipCode}.Where(x => x != null));
@@ -332,7 +334,9 @@ namespace Knapcode.ConnectorRide.Core
             public Dictionary<Schedule, string> ShapeIds { get; set; }
             public List<ShapePoint> ShapePoints { get; set; }
             public Dictionary<string, StopAndTableStop> StopAndTableStops { get; set; }
+            public List<string> StopNames { get; set; }
             public Dictionary<string, Route> Routes { get; set; } 
+            public List<string> RouteNames { get; set; } 
             public List<Trip> Trips { get; set; }
             public List<StopTime> StopTimes { get; set; }
         }
