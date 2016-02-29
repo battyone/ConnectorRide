@@ -39,9 +39,14 @@ namespace Knapcode.ConnectorRide.Web
                 new { controller = RemoveControllerSuffix(nameof(SchedulesController)), action = nameof(SchedulesController.UpdateScrapeResultAsync) });
 
             config.Routes.MapHttpRoute(
-                nameof(SchedulesController) + "_" + nameof(SchedulesController.UpdateGtfsFeedArchiveAsync),
+                nameof(SchedulesController) + "_" + nameof(SchedulesController.UpdateGtfsFeedArchiveGroupedAsync),
                 "commands/update-gtfs",
-                new { controller = RemoveControllerSuffix(nameof(SchedulesController)), action = nameof(SchedulesController.UpdateGtfsFeedArchiveAsync) });
+                new { controller = RemoveControllerSuffix(nameof(SchedulesController)), action = nameof(SchedulesController.UpdateGtfsFeedArchiveGroupedAsync) });
+
+            config.Routes.MapHttpRoute(
+                nameof(SchedulesController) + "_" + nameof(SchedulesController.UpdateGtfsFeedArchiveUngroupedAsync),
+                "commands/update-gtfs-ungrouped",
+                new { controller = RemoveControllerSuffix(nameof(SchedulesController)), action = nameof(SchedulesController.UpdateGtfsFeedArchiveUngroupedAsync) });
 
             config.Routes.MapHttpRoute(
                 nameof(SchedulesController) + "_" + nameof(SchedulesController.GetLatestScrapeResultAsync),
@@ -49,9 +54,14 @@ namespace Knapcode.ConnectorRide.Web
                 new { controller = RemoveControllerSuffix(nameof(SchedulesController)), action = nameof(SchedulesController.GetLatestScrapeResultAsync) });
 
             config.Routes.MapHttpRoute(
-                nameof(SchedulesController) + "_" + nameof(SchedulesController.GetLatestGtfsFeedArchiveAsync),
+                nameof(SchedulesController) + "_" + nameof(SchedulesController.GetLatestGtfsFeedArchiveGroupedAsync),
                 "gtfs",
-                new { controller = RemoveControllerSuffix(nameof(SchedulesController)), action = nameof(SchedulesController.GetLatestGtfsFeedArchiveAsync) });
+                new { controller = RemoveControllerSuffix(nameof(SchedulesController)), action = nameof(SchedulesController.GetLatestGtfsFeedArchiveGroupedAsync) });
+
+            config.Routes.MapHttpRoute(
+                nameof(SchedulesController) + "_" + nameof(SchedulesController.GetLatestGtfsFeedArchiveUnroupedAsync),
+                "gtfs-ungrouped",
+                new { controller = RemoveControllerSuffix(nameof(SchedulesController)), action = nameof(SchedulesController.GetLatestGtfsFeedArchiveUnroupedAsync) });
         }
 
         private static string RemoveControllerSuffix(string input)

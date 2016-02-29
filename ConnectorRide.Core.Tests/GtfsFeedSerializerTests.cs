@@ -10,10 +10,21 @@ namespace Knapcode.ConnectorRide.Core.Tests
     public class GtfsConverterTests
     {
         [Fact]
-        public async Task GtfsFeedSerializer_HasExpectedFileNames()
+        public async Task GtfsFeedSerializer_HasExpectedFileNamesWithGroupingAmPm()
+        {
+            await VerifyExpectedFileNames(true);
+        }
+
+        [Fact]
+        public async Task GtfsFeedSerializer_HasExpectedFileNamesWithoutGroupingAmPm()
+        {
+            await VerifyExpectedFileNames(false);
+        }
+
+        private static async Task VerifyExpectedFileNames(bool groupAmPm)
         {
             // Arrange
-            var feed = await TestData.GetGtfsFeedAsync();
+            var feed = await TestData.GetGtfsFeedAsync(groupAmPm);
             var csvSerializer = new GtfsCsvSerializer();
             var target = new GtfsFeedSerializer(csvSerializer);
 

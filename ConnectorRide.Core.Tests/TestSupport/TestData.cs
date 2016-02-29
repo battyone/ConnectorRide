@@ -21,10 +21,10 @@ namespace Knapcode.ConnectorRide.Core.Tests.TestSupport
             }
         }
 
-        public static async Task<GtfsFeed> GetGtfsFeedAsync()
+        public static async Task<GtfsFeed> GetGtfsFeedAsync(bool groupAmPm)
         {
             var scrapeResult = await GetScrapeResultAsync();
-            return new GtfsConverter().ConvertToFeed(scrapeResult);
+            return new GtfsConverter().ConvertToFeed(scrapeResult, groupAmPm);
         }
 
         private static Stream GetResourceStream(string name)

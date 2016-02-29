@@ -9,18 +9,19 @@ namespace Knapcode.ConnectorRide.Core
 {
     public interface IGtfsConverter
     {
-        GtfsFeed ConvertToFeed(ScrapeResult scrapeResult);
+        GtfsFeed ConvertToFeed(ScrapeResult scrapeResult, bool groupAmPm);
     }
 
     public class GtfsConverter : IGtfsConverter
     {
-        public GtfsFeed ConvertToFeed(ScrapeResult scrapeResult)
+        public GtfsFeed ConvertToFeed(ScrapeResult scrapeResult, bool groupAmPm)
         {
-            var context = new ConversionContext { ScrapeResult = scrapeResult };
+            var context = new ConversionContext { ScrapeResult = scrapeResult, GroupAmPm = groupAmPm };
 
-            // The scraped models are close to being a subset of GTFS. The main difference is that 
+            // The scraped models are basically a subset of GTFS. The main difference is that 
             // the AM and PM trips in the scraped models are separate routes (and are called
-            // "schedules"). First step, then, is to associate AM and PM schedules.
+            // "schedules"). If "groupAmPm" true, then combine schedules that have the except for
+            // "AM" or "PM" suffix.
             InitializeSchedulePairs(context);
 
             // Initialize the agency and calendar based on known constants.
@@ -53,8 +54,15 @@ namespace Knapcode.ConnectorRide.Core
 
             foreach (var pair in context.SchedulePairs)
             {
-                ConvertTripThenStopTimes(context, pair.Name, pair.Am, Period.Am);
-                ConvertTripThenStopTimes(context, pair.Name, pair.Pm, Period.Pm);
+                if (pair.Am != null)
+                {
+                    ConvertTripThenStopTimes(context, pair.Name, pair.Am, Period.Am);
+                }
+
+                if (pair.Pm != null)
+                {
+                    ConvertTripThenStopTimes(context, pair.Name, pair.Pm, Period.Pm);
+                }
             }
         }
 
@@ -164,8 +172,15 @@ namespace Knapcode.ConnectorRide.Core
             var stopAndTableStops = new Dictionary<string, StopAndTableStop>();
             foreach (var pair in context.SchedulePairs)
             {
-                ConvertStops(stopAndTableStops, pair.Am);
-                ConvertStops(stopAndTableStops, pair.Pm);
+                if (pair.Am != null)
+                {
+                    ConvertStops(stopAndTableStops, pair.Am);
+                }
+
+                if (pair.Pm != null)
+                {
+                    ConvertStops(stopAndTableStops, pair.Pm);
+                }
             }
 
             context.StopAndTableStops = stopAndTableStops;
@@ -207,8 +222,15 @@ namespace Knapcode.ConnectorRide.Core
 
             foreach (var pair in context.SchedulePairs)
             {
-                ConvertShapes(context, pair.Am);
-                ConvertShapes(context, pair.Pm);
+                if (pair.Am != null)
+                {
+                    ConvertShapes(context, pair.Am);
+                }
+
+                if (pair.Pm != null)
+                {
+                    ConvertShapes(context, pair.Pm);
+                }
             }
         }
 
@@ -234,12 +256,13 @@ namespace Knapcode.ConnectorRide.Core
 
         private void InitializeSchedulePairs(ConversionContext context)
         {
+            context.SchedulePairs = new List<SchedulePair>();
+
             var nameGroups = context.ScrapeResult
                 .Schedules
-                .Select(s => new {NameWithPeriod = GetNameWithPeriod(s.Name), Schedule = s})
+                .Select(s => new { NameWithPeriod = GetNameWithPeriod(s.Name), Schedule = s })
                 .GroupBy(s => s.NameWithPeriod.Name);
 
-            var schedulePairs = new List<SchedulePair>();
             foreach (var nameGroup in nameGroups)
             {
                 string name = nameGroup.Key;
@@ -258,15 +281,30 @@ namespace Knapcode.ConnectorRide.Core
                     throw new ConnectorRideException($"There should be exactly one (not {am.Length}) PM schedules with the name '{name}'.");
                 }
 
-                schedulePairs.Add(new SchedulePair
+                if (context.GroupAmPm)
                 {
-                    Name = name,
-                    Am = am[0].Schedule,
-                    Pm = pm[0].Schedule
-                });
-            }
+                    context.SchedulePairs.Add(new SchedulePair
+                    {
+                        Name = name,
+                        Am = am[0].Schedule,
+                        Pm = pm[0].Schedule
+                    });
+                }
+                else
+                {
+                    context.SchedulePairs.Add(new SchedulePair
+                    {
+                        Name = am[0].Schedule.Name,
+                        Am = am[0].Schedule
+                    });
 
-            context.SchedulePairs = schedulePairs;
+                    context.SchedulePairs.Add(new SchedulePair
+                    {
+                        Name = pm[0].Schedule.Name,
+                        Pm = pm[0].Schedule
+                    });
+                }
+            }
         }
 
         private NameWithPeriod GetNameWithPeriod(string name)
@@ -287,6 +325,7 @@ namespace Knapcode.ConnectorRide.Core
         private class ConversionContext
         {
             public ScrapeResult ScrapeResult { get; set; }
+            public bool GroupAmPm { get; set; }
             public List<SchedulePair> SchedulePairs { get; set; }
             public Agency Agency { get; set; }
             public Service Service { get; set; }

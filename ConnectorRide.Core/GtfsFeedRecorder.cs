@@ -9,7 +9,7 @@ namespace Knapcode.ConnectorRide.Core
 {
     public interface IGtfsFeedArchiveRecorder
     {
-        Task<UploadResult> RecordAsync(ScrapeResult scrapeResult, RecordRequest request);
+        Task<UploadResult> RecordAsync(ScrapeResult scrapeResult, bool groupAmPm, RecordRequest request);
         Task<Stream> GetLatestAsync(RecordRequest request);
     }
 
@@ -26,12 +26,12 @@ namespace Knapcode.ConnectorRide.Core
             _serializer = serializer;
         }
 
-        public async Task<UploadResult> RecordAsync(ScrapeResult scrapeResult, RecordRequest request)
+        public async Task<UploadResult> RecordAsync(ScrapeResult scrapeResult, bool groupAmPm, RecordRequest request)
         {
             using (var memoryStream = new MemoryStream())
             {
                 // convert the scrape result to a GTFS .zip file
-                var gtfsFeed = _converter.ConvertToFeed(scrapeResult);
+                var gtfsFeed = _converter.ConvertToFeed(scrapeResult, groupAmPm);
                 await _serializer.SerializeAsync(memoryStream, gtfsFeed);
                 memoryStream.Seek(0, SeekOrigin.Begin);
 

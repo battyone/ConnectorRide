@@ -41,29 +41,24 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             _settings = new Settings(settingsService);
         }
 
-        public async Task<HttpResponseMessage> GetLatestGtfsFeedArchiveAsync()
+        public async Task<HttpResponseMessage> GetLatestGtfsFeedArchiveGroupedAsync()
         {
-            var request = GetGtfsFeedArchiveRequest();
-            var stream = await _gtfsFeedArchiveRecord.GetLatestAsync(request);
+            return await GetLatestGtfsFeedArchiveAsync(true);
+        }
 
-            if (stream == null)
-            {
-                return new HttpResponseMessage(HttpStatusCode.NotFound)
-                {
-                    Content = new StringContent("The GTFS feed archive has not been created yet.", Encoding.UTF8, "text/plain")
-                };
-            }
+        public async Task<UploadResult> UpdateGtfsFeedArchiveGroupedAsync()
+        {
+            return await UpdateGtfsFeedArchiveAsync(true);
+        }
 
-            return new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StreamContent(stream)
-                {
-                    Headers =
-                    {
-                        ContentType = MediaTypeHeaderValue.Parse("application/octet-stream")
-                    }
-                }
-            };
+        public async Task<HttpResponseMessage> GetLatestGtfsFeedArchiveUnroupedAsync()
+        {
+            return await GetLatestGtfsFeedArchiveAsync(false);
+        }
+
+        public async Task<UploadResult> UpdateGtfsFeedArchiveUngroupedAsync()
+        {
+            return await UpdateGtfsFeedArchiveAsync(false);
         }
 
         public async Task<ScrapeResult> GetLatestScrapeResultAsync()
@@ -87,11 +82,36 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             return await _throttledScrapeResultRecorder.RecordLatestAsync(_settings.SchedulesMaximumScrapeFrequency, request);
         }
 
-        public async Task<UploadResult> UpdateGtfsFeedArchiveAsync()
+        private async Task<HttpResponseMessage> GetLatestGtfsFeedArchiveAsync(bool groupAmPm)
+        {
+            var request = GetGtfsFeedArchiveRequest(groupAmPm);
+            var stream = await _gtfsFeedArchiveRecord.GetLatestAsync(request);
+
+            if (stream == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new StringContent("The GTFS feed archive has not been created yet.", Encoding.UTF8, "text/plain")
+                };
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StreamContent(stream)
+                {
+                    Headers =
+                    {
+                        ContentType = MediaTypeHeaderValue.Parse("application/octet-stream")
+                    }
+                }
+            };
+        }
+
+        private async Task<UploadResult> UpdateGtfsFeedArchiveAsync(bool groupAmPm)
         {
             var scrapeResult = await GetLatestScrapeResultAsync();
-            var request = GetGtfsFeedArchiveRequest();
-            return await _gtfsFeedArchiveRecord.RecordAsync(scrapeResult, request);
+            var request = GetGtfsFeedArchiveRequest(groupAmPm);
+            return await _gtfsFeedArchiveRecord.RecordAsync(scrapeResult, groupAmPm, request);
         }
 
         private RecordRequest GetScrapeResultRequest()
@@ -104,11 +124,13 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             };
         }
 
-        private RecordRequest GetGtfsFeedArchiveRequest()
+        private RecordRequest GetGtfsFeedArchiveRequest(bool groupAmPm)
         {
+            var pathFormat = groupAmPm ? _settings.GtfsFeedArchiveGroupedPathFormat : _settings.GtfsFeedArchiveUngroupedPathFormat;
+
             return new RecordRequest
             {
-                PathFormat = _settings.GtfsFeedArchivePathFormat,
+                PathFormat = pathFormat,
                 StorageConnectionString = _settings.StorageConnectionString,
                 StorageContainer = _settings.StorageContainer
             };
