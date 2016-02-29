@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Knapcode.ConnectorRide.Core;
 using Knapcode.ConnectorRide.Core.Abstractions;
-using Knapcode.SocketToMe.Http;
 using Newtonsoft.Json;
 
 namespace Knapcode.ConnectorRide.Tool
@@ -19,8 +18,7 @@ namespace Knapcode.ConnectorRide.Tool
         {
             // initialize
             var systemTime = new SystemTime();
-            var handler = new NetworkHandler();
-            var httpClient = new HttpClient(handler);
+            var httpClient = new HttpClient();
             var connectorClient = new Client(httpClient);
             var connectorScraper = new Scraper(systemTime, connectorClient);
             var jsonWriter = new JsonTextWriter(Console.Out);
