@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, height=device-height" />
+	<title>FixedRouteTrack</title>
+	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.0/jquery.mobile.structure-1.3.0.min.css" />
+	<link href="/Content/jquery.mobile.metro.theme.css" rel="stylesheet" />
+	<link href="/Content/Site.Mobile.css" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script>
+		$(function () {
+			$.ajaxSetup({ cache: false });
+		});
+		$(document).bind('mobileinit', function () {
+			$window = $.mobile.window;
+			$.mobile.loader.prototype.fakeFixLoader = function () {
+				if ($.support.scrollTop && $(window).scrollTop() == 0) {
+					this.element
+						.css({
+							top: 0
+						});
+				}
+				else {
+					this.element
+						.css({
+							top: $.support.scrollTop && $(window).scrollTop() || 40
+						});
+				}
+			}
+			$.mobile.loader.prototype.checkLoaderPosition = function () {
+				var offset = this.element.offset(),
+				scrollTop = $window.scrollTop(),
+				screenHeight = $.mobile.getScreenHeight();
+
+				if (offset.top < scrollTop || (offset.top - scrollTop) > screenHeight) {
+					this.element.addClass("ui-loader-fakefix");
+					this.fakeFixLoader();
+					$window
+						.unbind("scroll", this.checkLoaderPosition)
+						.bind("scroll", $.proxy(this.fakeFixLoader, this));
+				}
+				else {
+					this.fakeFixLoader();
+				}
+			}
+		});
+
+	</script>
+	<script src="https://code.jquery.com/mobile/1.3.0/jquery.mobile-1.3.0.min.js"></script>
+    <script src="/Scripts/jquery.cookie.js"></script>
+</head>
+<body>
+
+	<div id="FixedRouteTrackPage" data-role="page" data-theme="a" data-dom-cache="false">
+		<div data-role="header" id="headerBanner">
+			<div>
+				<div id="headerLogo">
+					<div id="headerLogoText">
+						<label>RE&amp;F</label>
+					</div>
+				</div>
+				<div id="headerText">
+					<a href='/' style="text-decoration:underline;" data-transition="slide" data-direction="reverse" >
+						<div style="font-weight: normal; color: white;">
+							msshuttle.mobi
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="greenStripe topStripe"></div>
+		<div data-role="content">
+			
+
+<script type="text/javascript" src="https://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0&s=1"></script>
+<script type="text/javascript">
+    var map, vehicleCoords, firstLoc, lastLoc, mapcoords, waypoints, infobox, vehicles, routeid;
+    //var auto_refresh;
+
+    $("#FixedRouteTrackPage").on("pageshow", function () {
+        $.mobile.loading("show");
+
+        $('#upBtn').click(function () {
+            var h = map.getHeight();
+            var pos = map.tryPixelToLocation(new Microsoft.Maps.Point(map.getWidth()/2, h/2 - h*0.25), Microsoft.Maps.PixelReference.control);
+            map.setView({ center: pos });
+        });
+
+        $('#downBtn').click(function () {
+            var h = map.getHeight();
+            var pos = map.tryPixelToLocation(new Microsoft.Maps.Point(map.getWidth()/2, h/2 + h*0.25), Microsoft.Maps.PixelReference.control);
+            map.setView({ center: pos });
+        });
+
+        $('#leftBtn').click(function () {
+            var w = map.getWidth();
+            var pos = map.tryPixelToLocation(new Microsoft.Maps.Point(w/2 - w*0.25, map.getHeight()/2), Microsoft.Maps.PixelReference.control);
+            map.setView({ center: pos });
+        });
+
+        $('#rightBtn').click(function () {
+            var w = map.getWidth();
+            var pos = map.tryPixelToLocation(new Microsoft.Maps.Point(w/2 + w*0.25, map.getHeight()/2), Microsoft.Maps.PixelReference.control);
+            map.setView({ center: pos });
+        });
+
+        $('#zoominBtn').click(function () {
+            var z = map.getZoom();
+            if (z < 21) {
+                map.setView({ zoom: z+1 });
+            }
+        });
+
+        $('#zoomoutBtn').click(function () {
+            var z = map.getZoom();
+            if (z > 9) {
+                map.setView({ zoom: z-1 });
+            }
+        });
+
+        setTimeout(function () {
+            InitializeModelToJS();
+            $.mobile.loading("hide");
+        }, 2000);
+
+        //auto_refresh = setInterval(function(){
+        //    RefreshVehicleLocs();
+        //}, 10000);
+    });
+
+    $("#FixedRouteTrackPage").on("pagehide", function () {
+        //auto_refresh = clearInterval(auto_refresh);
+        map = null;
+    });
+
+    function InitializeModelToJS() {
+        mapcoords = [] 
+        waypoints = [{"ExtensionData":{},"Address":null,"City":null,"Description":null,"DestinationBookingMessage":null,"ID":16,"IsDrop":true,"IsPick":true,"MSCampus":null,"Name":"REDMOND TOWN B5","PickupBookingMessage":null,"State":null,"XYCoords":{"ExtensionData":{},"Latitude":47.668452,"Longitude":-122.118867},"ZipCode":null},{"ExtensionData":{},"Address":null,"City":null,"Description":null,"DestinationBookingMessage":null,"ID":1,"IsDrop":true,"IsPick":true,"MSCampus":null,"Name":"OTC","PickupBookingMessage":null,"State":null,"XYCoords":{"ExtensionData":{},"Latitude":47.6437986679462,"Longitude":-122.133124126182},"ZipCode":null}];
+        vehicles = [];
+        routeid = '11667';
+
+        LoadMap();
+    }
+
+    function LoadMap() {
+        var options = {
+            credentials: "AjC_GrsNO_9q_4a7qZkdqiHFBe0B0IcOW2_L8MnIzfqZWUqqDeKkVupDonvqsH_F",
+            mapTypeId: Microsoft.Maps.MapTypeId.birdseye,
+            showDashboard: false,
+            showScalebar: false,
+            enableSearchLogo: false,
+            disableKeyboardInput: true,
+            //disableMouseInput: true,
+            //disableTouchInput: true,
+            enableSearchLogo: false,
+            fixedMapPosition: true,
+        };
+        map = new Microsoft.Maps.Map(document.getElementById("mapDiv"), options);
+        //alert(map);
+        infobox = new Microsoft.Maps.Infobox(new Microsoft.Maps.Location(0,0), {visible:true, width:150, height:50});
+        Microsoft.Maps.Events.addHandler(infobox, "click", hideInfobox);
+
+        DeletePreviousEntities();
+        DrawMapLines();
+        DrawWaypoints();
+        DrawVehicles();
+        map.entities.push(infobox);
+    }
+
+    function SetBounds(wpArray){
+        if (wpArray.length >0){
+            map.setView({bounds: Microsoft.Maps.LocationRect.fromLocations(wpArray)});
+        }
+        else{
+            map.setView({center: new Microsoft.Maps.Location(47.644775, -122.132772)});
+        }
+    }
+
+    function DeletePreviousEntities() {
+        map.entities.clear();
+    }
+
+    function DrawMapLines() {
+        var locArray = new Array();
+        $.each(mapcoords, function (index) {
+            var wp = new Microsoft.Maps.Location(this.Latitude, this.Longitude);
+            locArray.push(wp);
+        });
+        if (locArray.length > 0)
+        {
+            var mapline = new Microsoft.Maps.Polyline(locArray, { strokeColor: new Microsoft.Maps.Color(255, 0, 0, 255), strokeThickness: 5 });
+            mapline.Type = "mapline";
+            map.entities.push(mapline);
+        }
+        
+    }
+
+    function DrawWaypoints() {
+        var wpArray = new Array();
+        $.each(waypoints, function (index) {
+            var wp = new Microsoft.Maps.Location(this.XYCoords.Latitude, this.XYCoords.Longitude);
+            wpArray.push(wp);
+            var pin = new Microsoft.Maps.Pushpin(wp, { icon: '/Content/images/fixedstop.png', height: 25 });
+            pin.Name = this.Name;
+            pin.Type = "waypoint";
+            Microsoft.Maps.Events.addHandler(pin, 'click', displayInfobox);
+            map.entities.push(pin);
+        });
+        SetBounds(wpArray);
+    }
+
+    function DrawVehicles(){
+        if ('False' == 'True') {
+            $.each(vehicles, function(index){
+                var vehLoc = new Microsoft.Maps.Location(this.XYCoords.Latitude, this.XYCoords.Longitude);
+                var vehPin = new Microsoft.Maps.Pushpin(vehLoc, {icon:'/Content/images/shuttle.png', width:75});
+                vehPin.Name = this.Name;
+                vehPin.Type = "shuttle";
+                Microsoft.Maps.Events.addHandler(vehPin, 'click', displayInfobox);
+                map.entities.push(vehPin);
+            });
+        }
+    }
+
+    function displayInfobox(object) {
+        if (object.targetType == 'pushpin') {
+            if (infobox.getVisible())
+            {
+                if (object.target.Name == infobox.getDescription()){
+                    infobox.setOptions({ visible: false });
+                    return;
+                }
+            }
+            infobox.setLocation(object.target.getLocation());
+            infobox.setOptions({description:object.target.Name, visible: true });
+        }
+    }
+
+    function RefreshVehicleLocs(){
+        $.get('/FixedRoute/FixedRouteTrackRefresh',{routeID: '11667'}, function(data){
+            for(i = 0; i < map.entities.getLength(); i++)
+            {
+                var entity = map.entities.get(i);
+                if (entity.Type == "shuttle")
+                {
+                    map.entities.remove(entity);
+                }
+            }
+            vehicles = data.vehicles;
+            DrawVehicles();
+        });
+    }
+
+    function hideInfobox(){
+        infobox.setOptions({visible:false});
+    }
+</script>
+<div id="mapDiv" class="msshuttleMap"></div>
+<div id="upBtn" style="position: absolute; top: 75px; left: 50px;">
+    <img src="/Content/images/up.png" />
+</div>
+<div id="leftBtn" style="position: absolute; top: 105px; left: 15px;">
+    <img src="/Content/images/left.png" />
+</div>
+<div id="rightBtn" style="position: absolute; top: 105px; left: 85px;">
+    <img src="/Content/images/right.png" />
+</div>
+<div id="downBtn" style="position: absolute; top: 135px; left: 50px;">
+    <img src="/Content/images/down.png" />
+</div>
+<div id="zoominBtn" style="position: absolute; top: 75px; left: 210px">
+    <img src="/Content/images/zoomin.png" />
+</div>
+<div id="zoomoutBtn" style="position: absolute; top: 75px; left: 255px">
+    <img src="/Content/images/zoomout.png" />
+</div>
+		</div>
+
+	</div>
+</body>
+</html>

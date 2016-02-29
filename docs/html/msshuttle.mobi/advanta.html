@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, height=device-height" />
+	<title>FixedRouteSchedule</title>
+	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.0/jquery.mobile.structure-1.3.0.min.css" />
+	<link href="/Content/jquery.mobile.metro.theme.css" rel="stylesheet" />
+	<link href="/Content/Site.Mobile.css" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script>
+		$(function () {
+			$.ajaxSetup({ cache: false });
+		});
+		$(document).bind('mobileinit', function () {
+			$window = $.mobile.window;
+			$.mobile.loader.prototype.fakeFixLoader = function () {
+				if ($.support.scrollTop && $(window).scrollTop() == 0) {
+					this.element
+						.css({
+							top: 0
+						});
+				}
+				else {
+					this.element
+						.css({
+							top: $.support.scrollTop && $(window).scrollTop() || 40
+						});
+				}
+			}
+			$.mobile.loader.prototype.checkLoaderPosition = function () {
+				var offset = this.element.offset(),
+				scrollTop = $window.scrollTop(),
+				screenHeight = $.mobile.getScreenHeight();
+
+				if (offset.top < scrollTop || (offset.top - scrollTop) > screenHeight) {
+					this.element.addClass("ui-loader-fakefix");
+					this.fakeFixLoader();
+					$window
+						.unbind("scroll", this.checkLoaderPosition)
+						.bind("scroll", $.proxy(this.fakeFixLoader, this));
+				}
+				else {
+					this.fakeFixLoader();
+				}
+			}
+		});
+
+	</script>
+	<script src="https://code.jquery.com/mobile/1.3.0/jquery.mobile-1.3.0.min.js"></script>
+    <script src="/Scripts/jquery.cookie.js"></script>
+</head>
+<body>
+
+	<div id="FixedRouteSchedulePage" data-role="page" data-theme="a" data-dom-cache="false">
+		<div data-role="header" id="headerBanner">
+			<div>
+				<div id="headerLogo">
+					<div id="headerLogoText">
+						<label>RE&amp;F</label>
+					</div>
+				</div>
+				<div id="headerText">
+					<a href='/' style="text-decoration:underline;" data-transition="slide" data-direction="reverse" >
+						<div style="font-weight: normal; color: white;">
+							msshuttle.mobi
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="greenStripe topStripe"></div>
+		<div data-role="content">
+			
+
+<label class="pageTitle">ADVANTA</label>
+<table>
+    <tr>
+            <th class="fixedRouteGridColumns fixedRouteHeaders"> </th>
+            <th class="fixedRouteGridColumns fixedRouteHeaders">ADVANTA C</th>
+            <th class="fixedRouteGridColumns fixedRouteHeaders">OTC</th>
+            <th class="fixedRouteGridColumns fixedRouteHeaders">CTC</th>
+    </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 3
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    ----
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:00 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:06 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 1
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    6:50 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:10 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:16 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 2
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    7:00 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:20 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:26 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 4
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    7:10 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:30 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:36 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 5
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    7:20 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:40 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:46 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 6
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    7:30 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:50 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:56 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 3
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    7:40 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    8:00 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    8:06 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 1
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    7:50 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    8:10 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    8:16 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 2
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    8:00 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    8:20 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    8:26 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 4
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    8:10 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    8:30 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    8:36 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 5
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    8:20 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    8:40 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    8:46 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 6
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    8:30 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    8:50 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    8:56 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 3
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    8:40 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    9:00 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    9:06 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 1
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    8:50 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    9:10 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    9:16 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 2
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    9:00 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    9:20 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    9:26 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 4
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    9:10 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    9:30 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    9:36 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 5
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    9:20 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    9:40 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    9:46 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 6
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    9:30 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    9:50 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    9:56 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 3
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    9:40 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    10:00 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    10:06 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 1
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    9:50 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    10:10 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    10:16 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 2
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    10:00 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    10:20 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    10:26 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 4
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    10:10 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    10:30 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    10:36 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 5
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    10:20 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    10:40 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    10:46 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 6
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    10:30 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    10:50 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    10:56 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 3
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    11:00 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    11:20 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    11:26 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 1
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    11:20 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    11:40 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    11:46 AM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 2
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    11:40 AM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    12:00 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    12:06 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 3
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    12:00 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    12:20 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    12:26 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 1
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    12:20 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    12:40 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    12:46 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 2
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    12:40 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    1:00 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    1:06 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 3
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    1:00 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    1:20 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    1:26 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 1
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    1:20 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    1:40 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    1:46 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 2
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    1:40 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    2:00 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    2:06 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 7
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    2:00 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    2:20 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    2:26 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 8
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    2:20 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    2:40 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    2:46 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 9
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    2:40 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    3:00 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    3:06 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 7
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    3:00 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    3:20 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    3:26 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 8
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    3:20 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    3:40 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    3:46 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 9
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    3:40 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    4:00 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    4:06 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 7
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    4:00 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    4:20 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    4:26 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 10
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    4:10 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    4:30 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    4:36 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 8
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    4:20 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    4:40 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    4:46 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 11
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    4:30 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    4:50 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    4:56 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 9
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    4:40 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    5:00 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    5:06 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 12
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    4:50 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    5:10 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    5:16 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 7
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    5:00 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    5:20 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    5:26 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 10
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    5:10 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    5:30 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    5:36 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 8
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    5:20 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    5:40 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    5:46 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 11
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    5:30 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    5:50 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    5:56 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 9
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    5:40 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    6:00 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    6:06 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 12
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    5:50 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    6:10 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    6:16 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 10
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    6:10 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    6:30 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    6:36 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 7
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    6:20 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    6:40 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    6:46 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 11
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    6:30 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    6:50 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    6:56 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 8
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    6:40 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:00 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:06 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 12
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    6:50 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:10 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:16 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 9
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    7:00 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:20 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:26 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    ADV 8
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    7:30 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:50 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:56 PM
+                    </td>
+        </tr>
+</table>
+<a href='/FixedRoute/FixedRouteTrack?routeID=11653&amp;routeName=ADVANTA&amp;ShowVehicles=False' data-transition="slide" id="showMapBtn" data-role="button">view bing map</a>
+		</div>
+
+	</div>
+</body>
+</html>

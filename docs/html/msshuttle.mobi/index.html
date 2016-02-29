@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, height=device-height" />
+	<title>Shuttle Connect</title>
+	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.0/jquery.mobile.structure-1.3.0.min.css" />
+	<link href="/Content/jquery.mobile.metro.theme.css" rel="stylesheet" />
+	<link href="/Content/Site.Mobile.css" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script>
+		$(function () {
+			$.ajaxSetup({ cache: false });
+		});
+		$(document).bind('mobileinit', function () {
+			$window = $.mobile.window;
+			$.mobile.loader.prototype.fakeFixLoader = function () {
+				if ($.support.scrollTop && $(window).scrollTop() == 0) {
+					this.element
+						.css({
+							top: 0
+						});
+				}
+				else {
+					this.element
+						.css({
+							top: $.support.scrollTop && $(window).scrollTop() || 40
+						});
+				}
+			}
+			$.mobile.loader.prototype.checkLoaderPosition = function () {
+				var offset = this.element.offset(),
+				scrollTop = $window.scrollTop(),
+				screenHeight = $.mobile.getScreenHeight();
+
+				if (offset.top < scrollTop || (offset.top - scrollTop) > screenHeight) {
+					this.element.addClass("ui-loader-fakefix");
+					this.fakeFixLoader();
+					$window
+						.unbind("scroll", this.checkLoaderPosition)
+						.bind("scroll", $.proxy(this.fakeFixLoader, this));
+				}
+				else {
+					this.fakeFixLoader();
+				}
+			}
+		});
+
+	</script>
+	<script src="https://code.jquery.com/mobile/1.3.0/jquery.mobile-1.3.0.min.js"></script>
+    <script src="/Scripts/jquery.cookie.js"></script>
+</head>
+<body>
+
+	<div id="MainPage" data-role="page" data-theme="a" data-dom-cache="false">
+		<div data-role="header" id="headerBanner">
+			<div>
+				<div id="headerLogo">
+					<div id="headerLogoText">
+						<label>RE&amp;F</label>
+					</div>
+				</div>
+				<div id="headerText">
+					<a href='/' style="text-decoration:underline;" data-transition="slide" data-direction="reverse" >
+						<div style="font-weight: normal; color: white;">
+							msshuttle.mobi
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="greenStripe topStripe"></div>
+		<div data-role="content">
+			
+<noscript>
+    <!-- However you like handling your no JavaScript message -->
+    <h1>This site requires JavaScript.</h1>
+</noscript>
+<script type="text/javascript">
+    var auto_refresh;
+
+    // Cookie detection
+    document.cookie = "testing=cookies_enabled; path=/";
+    if (document.cookie.indexOf("testing=cookies_enabled") < 0) {
+        // however you want to handle if cookies are disabled
+        alert("This site works best with cookies enabled.");
+    }
+
+    $("#MainPage").on("pageshow", function () {
+        checkAlias();
+        setTileRefresh();
+    });
+
+    $("#MainPage").on("pagehide", function () {
+        auto_refresh = clearInterval(auto_refresh);
+    });
+
+    function checkAlias() {
+        var alias = '';
+        if (alias != "") {
+            $("#aliasDiv > label").text("Welcome " + alias);
+            $("#registerBtn").hide();
+            $("#aliasDiv").show();
+        }
+        else {
+            $.post('/Home/CheckAlias', function (data) {
+                if (data.status == "OK") {
+                    $("#aliasDiv > label").text("Welcome " + data.alias);
+                    $("#registerBtn").hide();
+                    $("#aliasDiv").show();
+                }
+                else {
+                    $("#registerBtn").show();
+                    $("#aliasDiv").hide();
+                }
+            });
+        }
+
+    }
+
+    function setTileRefresh() {
+        updateTile();
+        auto_refresh = clearInterval(auto_refresh);
+        auto_refresh = setInterval(function () { updateTile() }, 25000);
+    }
+
+    function updateTile() {
+        $("#trackShuttleSpan").hide();
+        $("#loadingSpan").show();
+        $.post('/Home/IndexMyShuttle', function (data) {
+            if (data.status == "OK") {
+                var trackshuttlespan = $("#trackShuttleSpan");
+                $(trackshuttlespan).html("");
+                if (data.shuttleStatus == "NotBooked") {
+                    $(trackshuttlespan).append("<span class='fullTile' style='background-color: #ffffff;color:dimgray;'><div style='color:dimgray;' class='indexTrackBtnText'>No Shuttles</div>" +
+                        "<div class='indexTrackBtnText' style='top:40px;color:dimgray;'>Booked</div></span>");
+                }
+                else if((data.shuttleStatus == "Booked" || data.shuttleStatus == "Arrived") && data.newUrl.length == 0){
+                    $(trackshuttlespan).append("<span class='fullTile' style='background-color:ffffff;color: dimgray;'><div class='indexTrackBtnText'>In</div>" +
+                        "<div class='indexTrackBtnText' style='top:40px;'>Shuttle</div></span>");
+                }
+                else if (data.shuttleStatus == "Booked" || data.shuttleStatus == "Arrived") {
+                    $(trackshuttlespan).append("<a href='" + data.newUrl + "' data-transition='slide' data-transition='slide' class='fullTileLink'>" +
+                    "<span class='fullTile' style='overflow:hidden;'>" +
+                    "<div class='indexTrackBtnText'>" + data.shuttleName + "</div>" +
+                    "<div class='indexTrackBtnText' style='top:40px;font-size:15px;'>Pickup @" + data.pickupLoc + "</div>" +
+                    "<div class='indexTrackBtnText' style='top:60px; font-size:15px;'>ETA @" + data.eta + "</div>" +
+                    "<span class='indexBtnText'>My Shuttle</span>" +
+                    "</span>" +
+                    "</a>");
+                }
+                else {
+                    $(trackshuttlespan).append("<span class='fullTile' style='background-color:#ffffff;color: dimgray;'><div style='color: dimgray;' class='indexTrackBtnText'>Last Shuttle</div>" +
+                        "<div class='indexTrackBtnText' style='top:40px;color: dimgray;'>" + data.shuttleStatus + "</div></span>");
+                }
+                $("#loadingSpan").hide();
+                $(trackshuttlespan).show();
+            }
+            else {
+                $("#loadingSpan").hide();
+                $(trackshuttlespan).append("<div>" + data.status + "</div>");
+            }
+
+        }).error(function (error) {
+            alert(error.responseText);
+        });
+    }
+
+</script>
+<div id="indexBtnsDiv">
+    <div class="ui-grid-solo" id="divReg">
+        <a id="registerBtn" href='/Home/Register' class="longHalfTileLink" data-transition="slide">
+            <span class="longHalfTile" style="background-color:#F25022; position: relative;">
+                <span class="indexBtnText">Register to Book Shuttles</span>
+            </span>
+        </a>
+        <div id="aliasDiv" class="longHalfTile" style="background-color: transparent; display: none;">
+            <label class="indexBtnText" style="font-size: 16pt;">
+            </label>
+        </div>
+    </div>
+    <div class="ui-grid-a">
+        <div class="ui-block-a">
+            <a href='/Shuttle/BookShuttle' class="fullTileLink" data-transition="slide"  >
+                <span class="fullTile">
+                    <img class="fullTileIcon" style="padding-top: 6px; top: 6px;" src="/Content/images/shuttle_icon.png" />
+                    <span class="indexBtnText">Book Shuttle</span>
+                </span>
+            </a>
+        </div>
+        <div class="ui-block-b" id="trackShuttleTile">
+            <span id="loadingSpan" class="fullTile" style="background-color: #ffffff;color:#808080;">
+                <span style="top:35px; left:35px; position:absolute;"><img style="height:60px; width:60px;" src="/Content/images/ajax-loader.gif" /></span>
+            </span>
+            <span id="trackShuttleSpan"></span>
+        </div>
+        <div class="ui-block-a">
+            <a href='/Shuttle/TrackShuttlesByBuilding' data-transition="slide" id="trackShuttleAnchor" class="fullTileLink">
+                <span class="fullTile">
+                    <img class="fullTileIcon" style="padding-top: 10px;" src="/Content/images/bybuilding_icon.png" />
+                    <span class="indexBtnText">Track Shuttles by Building</span>
+                </span>
+            </a>
+        </div>
+        <div class="ui-block-b">
+            <a href='/FixedRoute/FixedRoute?data_role=button' data-transition="slide"  class="fullTileLink" >
+                <span class="fullTile">
+                    <img class="fullTileIcon" style="padding-top: 10px;" src="/Content/images/fixed_icon.png" />
+                    <span class="indexBtnText">Fixed Route Schedules</span>
+                </span>
+            </a>
+        </div>
+    </div>
+</div>
+<div style="text-align: center;">
+    <a href='/Home/ShuttlePolicies' data-transition="slide">policies</a><span style="margin: 0px 9px;">|</span><a href='/Home/Privacy' data-transition="slide" >privacy</a><span style="margin: 0px 9px;">|</span><a href='/Home/Settings' data-transition="slide" >settings</a><span style="margin: 0px 9px;">|</span><a href='/Home/Support' data-transition="slide">support</a>
+</div>
+
+		</div>
+
+	</div>
+</body>
+</html>

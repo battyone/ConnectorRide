@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, height=device-height" />
+	<title>FixedRouteSchedule</title>
+	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.0/jquery.mobile.structure-1.3.0.min.css" />
+	<link href="/Content/jquery.mobile.metro.theme.css" rel="stylesheet" />
+	<link href="/Content/Site.Mobile.css" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script>
+		$(function () {
+			$.ajaxSetup({ cache: false });
+		});
+		$(document).bind('mobileinit', function () {
+			$window = $.mobile.window;
+			$.mobile.loader.prototype.fakeFixLoader = function () {
+				if ($.support.scrollTop && $(window).scrollTop() == 0) {
+					this.element
+						.css({
+							top: 0
+						});
+				}
+				else {
+					this.element
+						.css({
+							top: $.support.scrollTop && $(window).scrollTop() || 40
+						});
+				}
+			}
+			$.mobile.loader.prototype.checkLoaderPosition = function () {
+				var offset = this.element.offset(),
+				scrollTop = $window.scrollTop(),
+				screenHeight = $.mobile.getScreenHeight();
+
+				if (offset.top < scrollTop || (offset.top - scrollTop) > screenHeight) {
+					this.element.addClass("ui-loader-fakefix");
+					this.fakeFixLoader();
+					$window
+						.unbind("scroll", this.checkLoaderPosition)
+						.bind("scroll", $.proxy(this.fakeFixLoader, this));
+				}
+				else {
+					this.fakeFixLoader();
+				}
+			}
+		});
+
+	</script>
+	<script src="https://code.jquery.com/mobile/1.3.0/jquery.mobile-1.3.0.min.js"></script>
+    <script src="/Scripts/jquery.cookie.js"></script>
+</head>
+<body>
+
+	<div id="FixedRouteSchedulePage" data-role="page" data-theme="a" data-dom-cache="false">
+		<div data-role="header" id="headerBanner">
+			<div>
+				<div id="headerLogo">
+					<div id="headerLogoText">
+						<label>RE&amp;F</label>
+					</div>
+				</div>
+				<div id="headerText">
+					<a href='/' style="text-decoration:underline;" data-transition="slide" data-direction="reverse" >
+						<div style="font-weight: normal; color: white;">
+							msshuttle.mobi
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="greenStripe topStripe"></div>
+		<div data-role="content">
+			
+
+<label class="pageTitle">RTC (E ROUTE)</label>
+<table>
+    <tr>
+            <th class="fixedRouteGridColumns fixedRouteHeaders"> </th>
+            <th class="fixedRouteGridColumns fixedRouteHeaders">REDMOND TOWN B5</th>
+            <th class="fixedRouteGridColumns fixedRouteHeaders">OTC</th>
+    </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    PM-D E1
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    3:50 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    4:10 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    PM-D E2
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    4:10 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    4:30 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    PM-D E1
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    4:30 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    4:50 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    PM-D E2
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    4:50 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    5:10 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    PM-D E1
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    5:10 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    5:30 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    PM-D E2
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    5:30 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    5:50 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    PM-D E1
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    5:50 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    6:20 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    PM-D E2
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    6:10 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    6:40 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    PM-D E1
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    6:40 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:00 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    PM-D E2
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    7:00 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:20 PM
+                    </td>
+        </tr>
+        <tr>
+                <td class="fixedRouteGridColumnsRun">
+                    PM-D E1
+                </td>
+                    <td class="fixedRouteGridColumns">
+                    7:20 PM
+                    </td>
+                    <td class="fixedRouteGridColumns">
+                    7:40 PM
+                    </td>
+        </tr>
+</table>
+<a href='/FixedRoute/FixedRouteTrack?routeID=11667&amp;routeName=RTC%20%28E%20ROUTE%29&amp;ShowVehicles=False' data-transition="slide" id="showMapBtn" data-role="button">view bing map</a>
+		</div>
+
+	</div>
+</body>
+</html>

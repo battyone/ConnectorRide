@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, height=device-height" />
+	<title>FixedRouteScheduleList</title>
+	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.0/jquery.mobile.structure-1.3.0.min.css" />
+	<link href="/Content/jquery.mobile.metro.theme.css" rel="stylesheet" />
+	<link href="/Content/Site.Mobile.css" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script>
+		$(function () {
+			$.ajaxSetup({ cache: false });
+		});
+		$(document).bind('mobileinit', function () {
+			$window = $.mobile.window;
+			$.mobile.loader.prototype.fakeFixLoader = function () {
+				if ($.support.scrollTop && $(window).scrollTop() == 0) {
+					this.element
+						.css({
+							top: 0
+						});
+				}
+				else {
+					this.element
+						.css({
+							top: $.support.scrollTop && $(window).scrollTop() || 40
+						});
+				}
+			}
+			$.mobile.loader.prototype.checkLoaderPosition = function () {
+				var offset = this.element.offset(),
+				scrollTop = $window.scrollTop(),
+				screenHeight = $.mobile.getScreenHeight();
+
+				if (offset.top < scrollTop || (offset.top - scrollTop) > screenHeight) {
+					this.element.addClass("ui-loader-fakefix");
+					this.fakeFixLoader();
+					$window
+						.unbind("scroll", this.checkLoaderPosition)
+						.bind("scroll", $.proxy(this.fakeFixLoader, this));
+				}
+				else {
+					this.fakeFixLoader();
+				}
+			}
+		});
+
+	</script>
+	<script src="https://code.jquery.com/mobile/1.3.0/jquery.mobile-1.3.0.min.js"></script>
+    <script src="/Scripts/jquery.cookie.js"></script>
+</head>
+<body>
+
+	<div data-role="page" data-theme="a" data-dom-cache="false">
+		<div data-role="header" id="headerBanner">
+			<div>
+				<div id="headerLogo">
+					<div id="headerLogoText">
+						<label>RE&amp;F</label>
+					</div>
+				</div>
+				<div id="headerText">
+					<a href='/' style="text-decoration:underline;" data-transition="slide" data-direction="reverse" >
+						<div style="font-weight: normal; color: white;">
+							msshuttle.mobi
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="greenStripe topStripe"></div>
+		<div data-role="content">
+			
+
+<label class="pageTitle">fixed route schedules</label>
+<div data-role="fieldcontain">
+    <ul data-role="listview" data-filter="true" data-filter-theme="a" data-filter-placeholder="Filter routes...">
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11653&amp;rmid=0&amp;rn=ADVANTA' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>ADVANTA</label>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11668&amp;rmid=0&amp;rn=BRAVERN' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>BRAVERN</label>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11671&amp;rmid=0&amp;rn=BRAVERN_NEW' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>BRAVERN_NEW</label>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11669&amp;rmid=0&amp;rn=CARILLON-KIRK%20AM' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>CARILLON-KIRK AM</label>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11670&amp;rmid=0&amp;rn=CITY%20CENTER%20NEW' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>CITY CENTER NEW</label>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11654&amp;rmid=0&amp;rn=EASTGATE%20P%26R%20AM' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>EASTGATE P&amp;R AM</label>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11655&amp;rmid=0&amp;rn=EASTGATE%20P%26R%20PM' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>EASTGATE P&amp;R PM</label>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11656&amp;rmid=0&amp;rn=KIRKLAND-434%20AM' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>KIRKLAND-434 AM</label>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11657&amp;rmid=0&amp;rn=KIRKLAND-434%20PM' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>KIRKLAND-434 PM</label>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11665&amp;rmid=0&amp;rn=LINCOLN%20SQUARE' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>LINCOLN SQUARE</label>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11667&amp;rmid=0&amp;rn=RTC%20%28E%20ROUTE%29' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>RTC (E ROUTE)</label>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11658&amp;rmid=0&amp;rn=RTC%20GARAGE-MILL%20AM' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>RTC GARAGE-MILL AM</label>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11659&amp;rmid=0&amp;rn=RTC%20GARAGE-MILL%20PM' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>RTC GARAGE-MILL PM</label>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11660&amp;rmid=0&amp;rn=SAMMAMISH%20CAMPUS' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>SAMMAMISH CAMPUS</label>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11661&amp;rmid=0&amp;rn=SAMMAMISH%20COMMUTE%20AM' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>SAMMAMISH COMMUTE AM</label>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11662&amp;rmid=0&amp;rn=SAMMAMISH%20COMMUTE%20PM' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>SAMMAMISH COMMUTE PM</label>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11666&amp;rmid=0&amp;rn=SEATTLE' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>SEATTLE</label>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11663&amp;rmid=0&amp;rn=SR-520%20BIKE%20AM' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>SR-520 BIKE AM</label>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href='/FixedRoute/FixedRouteSchedule?rid=11664&amp;rmid=0&amp;rn=SR-520%20BIKE%20PM' data-transition="slide"  data-icon="arrow-r">
+                    <div style="height: 20px;">
+                        <label>SR-520 BIKE PM</label>
+                    </div>
+                </a>
+            </li>
+    </ul>
+</div>
+
+		</div>
+
+	</div>
+</body>
+</html>
