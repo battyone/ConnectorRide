@@ -34,7 +34,7 @@ namespace Knapcode.ConnectorRide.Web
                 var value = _provider.GetValue("ConnectorRide:ScrapeResult:MaximumScrapeFrequency");
                 if (value == null)
                 {
-                    return TimeSpan.FromHours(1);
+                    return TimeSpan.FromHours(12);
                 }
 
                 return TimeSpan.Parse(value);
