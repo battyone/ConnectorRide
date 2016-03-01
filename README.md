@@ -26,12 +26,12 @@ Currently, all of the required GTFS files are included in the feed as well as on
 
 ## Data
 
-I haven't yet made the data available for easy download. I'll probably do that soon.
+The data is available under the GitHub releases.
 
 ## Future
 
 1. Identify the scraper HTTP requests with a relevant user agent.
-1. Publish the JSON and GTFS data so that people can download it.
+1. Automatically update the data when it changes.
 1. Scrape [msshuttle.mobi](http://msshuttle.mobi).
 1. Run a [OneBusAway server](https://github.com/OneBusAway/onebusaway/wiki/Running-Onebusaway).
 1. Run an [OpenTripPlanner server](http://www.opentripplanner.org/). 
