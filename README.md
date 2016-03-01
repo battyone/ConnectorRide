@@ -26,7 +26,9 @@ Currently, all of the required GTFS files are included in the feed as well as on
 
 ## Data
 
-The data is available under the GitHub releases.
+The data is available under the [GitHub releases](https://github.com/joelverhagen/ConnectorRide/releases).
+
+- [March 1, 2016](https://github.com/joelverhagen/ConnectorRide/releases/tag/20160301)
 
 ## Future
 
