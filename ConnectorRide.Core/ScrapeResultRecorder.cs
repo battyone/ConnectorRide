@@ -1,8 +1,10 @@
 ﻿using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Knapcode.ConnectorRide.Core.RecorderModels;
 using Knapcode.ConnectorRide.Core.ScraperModels;
+using Knapcode.ToStorage.Core;
 using Knapcode.ToStorage.Core.AzureBlobStorage;
 using Newtonsoft.Json;
 using IStorageClient = Knapcode.ToStorage.Core.AzureBlobStorage.IClient;
@@ -20,12 +22,14 @@ namespace Knapcode.ConnectorRide.Core
         private readonly IScraper _scraper;
         private readonly IScrapeResultSerializer _serializer;
         private readonly IStorageClient _storageClient;
+        private readonly IUniqueClient _uniqueClient;
 
-        public ScrapeResultRecorder(IScraper scraper, IScrapeResultSerializer serializer, IStorageClient storageClient)
+        public ScrapeResultRecorder(IScraper scraper, IScrapeResultSerializer serializer, IStorageClient storageClient, IUniqueClient uniqueClient)
         {
             _scraper = scraper;
             _serializer = serializer;
             _storageClient = storageClient;
+            _uniqueClient = uniqueClient;
         }
         
         public async Task<ScrapeResult> GetLatestAsync(RecordRequest request)
@@ -60,10 +64,10 @@ namespace Knapcode.ConnectorRide.Core
                 await _scraper.RealTimeScrapeAsync(writer).ConfigureAwait(false);
             }
 
-            resultStream.Position = 0;
+            resultStream.Seek(0, SeekOrigin.Begin);
 
             // initialize storage
-            var uploadRequest = new UploadRequest
+            var uploadRequest = new UniqueUploadRequest
             {
                 ConnectionString = request.StorageConnectionString,
                 Container = request.StorageContainer,
@@ -72,13 +76,18 @@ namespace Knapcode.ConnectorRide.Core
                 Stream = resultStream,
                 Trace = TextWriter.Null,
                 UploadDirect = true,
-                UploadLatest = true
+                IsUniqueAsync = async x =>
+                {
+                    var equals = await new AsyncStreamEqualityComparer().EqualsAsync(resultStream, x.Stream, CancellationToken.None);
+                    resultStream.Seek(0, SeekOrigin.Begin);
+                    return equals;
+                }
             };
 
             // upload
             using (resultStream)
             {
-                return await _storageClient.UploadAsync(uploadRequest).ConfigureAwait(false);
+                return await _uniqueClient.UploadAsync(uploadRequest).ConfigureAwait(false);
             }
         }
     }

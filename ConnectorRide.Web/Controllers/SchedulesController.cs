@@ -31,7 +31,8 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             var serializer = new ScrapeResultSerializer();
             var storageSystemTime = new StorageSystemTime();
             var storageClient = new StorageClient(storageSystemTime);
-            _scrapeResultRecorder = new ScrapeResultRecorder(scraper, serializer, storageClient);
+            var uniqueClient = new UniqueClient(storageClient);
+            _scrapeResultRecorder = new ScrapeResultRecorder(scraper, serializer, storageClient, uniqueClient);
             _throttledScrapeResultRecorder = new ThrottledScrapeResultRecorder(systemTime, _scrapeResultRecorder);
             var gtfsConverter = new GtfsConverter();
             var gtfsCsvSerializer = new GtfsCsvSerializer();
