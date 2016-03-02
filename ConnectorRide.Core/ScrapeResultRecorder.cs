@@ -32,19 +32,20 @@ namespace Knapcode.ConnectorRide.Core
         {
             var getLatestRequest = new GetLatestRequest
             {
+                ConnectionString = request.StorageConnectionString,
                 PathFormat = request.PathFormat,
                 Container = request.StorageContainer,
                 Trace = TextWriter.Null
             };
 
-            using (var stream = await _storageClient.GetLatestStreamAsync(request.StorageConnectionString, getLatestRequest))
+            using (var streamResult = await _storageClient.GetLatestStreamAsync(getLatestRequest))
             {
-                if (stream == null)
+                if (streamResult == null)
                 {
                     return null;
                 }
 
-                return await _serializer.DeserializeAsync(stream);
+                return await _serializer.DeserializeAsync(streamResult.Stream);
             }
         }
 
@@ -64,6 +65,7 @@ namespace Knapcode.ConnectorRide.Core
             // initialize storage
             var uploadRequest = new UploadRequest
             {
+                ConnectionString = request.StorageConnectionString,
                 Container = request.StorageContainer,
                 ContentType = "application/json",
                 PathFormat = request.PathFormat,
@@ -76,7 +78,7 @@ namespace Knapcode.ConnectorRide.Core
             // upload
             using (resultStream)
             {
-                return await _storageClient.UploadAsync(request.StorageConnectionString, uploadRequest).ConfigureAwait(false);
+                return await _storageClient.UploadAsync(uploadRequest).ConfigureAwait(false);
             }
         }
     }

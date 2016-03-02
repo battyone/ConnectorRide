@@ -36,8 +36,9 @@ namespace Knapcode.ConnectorRide.Core
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
                 // upload the .zip file
-                return await _storageClient.UploadAsync(request.StorageConnectionString, new UploadRequest
+                return await _storageClient.UploadAsync(new UploadRequest
                 {
+                    ConnectionString = request.StorageConnectionString,
                     Stream = memoryStream,
                     ContentType = "application/octet-stream",
                     PathFormat = request.PathFormat,
@@ -53,12 +54,14 @@ namespace Knapcode.ConnectorRide.Core
         {
             var getLatestRequest = new GetLatestRequest
             {
+                ConnectionString = request.StorageConnectionString,
                 PathFormat = request.PathFormat,
                 Container = request.StorageContainer,
                 Trace = TextWriter.Null
             };
 
-            return await _storageClient.GetLatestStreamAsync(request.StorageConnectionString, getLatestRequest);
+            var result = await _storageClient.GetLatestStreamAsync(getLatestRequest);
+            return result?.Stream;
         }
     }
 }
