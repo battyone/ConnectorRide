@@ -49,7 +49,7 @@ namespace Knapcode.ConnectorRide.Core
                     return null;
                 }
 
-                return await _serializer.DeserializeAsync(streamResult.Stream);
+                return await _serializer.DeserializeAsync(streamResult.Stream, false);
             }
         }
 
@@ -76,11 +76,16 @@ namespace Knapcode.ConnectorRide.Core
                 Stream = resultStream,
                 Trace = TextWriter.Null,
                 UploadDirect = true,
-                IsUniqueAsync = async x =>
+                EqualsAsync = async x =>
                 {
-                    var equals = await new AsyncStreamEqualityComparer().EqualsAsync(resultStream, x.Stream, CancellationToken.None);
+                    var oldResult = await _serializer.DeserializeAsync(x.Stream, true);
+                    var newResult = await _serializer.DeserializeAsync(resultStream, true);
                     resultStream.Seek(0, SeekOrigin.Begin);
-                    return equals;
+
+                    var oldJson = JsonConvert.SerializeObject(oldResult.Schedules);
+                    var newJson = JsonConvert.SerializeObject(newResult.Schedules);
+
+                    return oldJson == newJson;
                 }
             };
 

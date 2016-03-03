@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Knapcode.ConnectorRide.Core.ScraperModels;
 using Newtonsoft.Json;
@@ -7,14 +8,14 @@ namespace Knapcode.ConnectorRide.Core
 {
     public interface IScrapeResultSerializer
     {
-        Task<ScrapeResult> DeserializeAsync(Stream stream);
+        Task<ScrapeResult> DeserializeAsync(Stream stream, bool leaveOpen);
     }
 
     public class ScrapeResultSerializer : IScrapeResultSerializer
     {
-        public Task<ScrapeResult> DeserializeAsync(Stream stream)
+        public Task<ScrapeResult> DeserializeAsync(Stream stream, bool leaveOpen)
         {
-            using (var reader = new StreamReader(stream))
+            using (var reader = new StreamReader(stream, Encoding.UTF8, false, 4092, leaveOpen))
             using (var jsonReader = new JsonTextReader(reader))
             {
                 var jsonSerializer = new JsonSerializer();

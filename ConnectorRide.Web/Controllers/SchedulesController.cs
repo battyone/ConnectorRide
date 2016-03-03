@@ -37,7 +37,7 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             var gtfsConverter = new GtfsConverter();
             var gtfsCsvSerializer = new GtfsCsvSerializer();
             var gtfsFeedSerializer = new GtfsFeedSerializer(gtfsCsvSerializer);
-            _gtfsFeedArchiveRecord = new GtfsFeedArchiveRecorder(storageClient, gtfsConverter, gtfsFeedSerializer);
+            _gtfsFeedArchiveRecord = new GtfsFeedArchiveRecorder(storageClient, uniqueClient, gtfsConverter, gtfsFeedSerializer);
             var settingsService = new SettingsProvider();
             _settings = new Settings(settingsService);
         }

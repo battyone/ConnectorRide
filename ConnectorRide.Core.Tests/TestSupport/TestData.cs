@@ -17,7 +17,7 @@ namespace Knapcode.ConnectorRide.Core.Tests.TestSupport
         {
             using (var stream = GetScrapeResultStream())
             {
-                return await new ScrapeResultSerializer().DeserializeAsync(stream);
+                return await new ScrapeResultSerializer().DeserializeAsync(stream, false);
             }
         }
 
