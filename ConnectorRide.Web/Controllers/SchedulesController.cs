@@ -30,7 +30,8 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             var scraper = new Scraper(systemTime, client);
             var serializer = new ScrapeResultSerializer();
             var storageSystemTime = new StorageSystemTime();
-            var storageClient = new StorageClient(storageSystemTime);
+            var pathBuilder = new PathBuilder();
+            var storageClient = new StorageClient(storageSystemTime, pathBuilder);
             var uniqueClient = new UniqueClient(storageClient);
             _scrapeResultRecorder = new ScrapeResultRecorder(scraper, serializer, storageClient, uniqueClient);
             _throttledScrapeResultRecorder = new ThrottledScrapeResultRecorder(systemTime, _scrapeResultRecorder);
