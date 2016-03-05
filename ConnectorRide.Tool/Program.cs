@@ -40,7 +40,7 @@ namespace Knapcode.ConnectorRide.Tool
                 var writer = new JsonScrapeResultWriter(jsonWriter);
 
                 // act
-                await connectorScraper.RealTimeScrapeAsync(writer).ConfigureAwait(false);
+                await connectorScraper.RealTimeScrapeAsync(writer);
                 return 0;
             }
 

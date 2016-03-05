@@ -29,7 +29,7 @@ namespace Knapcode.ConnectorRide.Core
         public async Task<UploadResult> RecordLatestAsync(TimeSpan maximumFrequency, RecordRequest request)
         {
             // mutex
-            var acquired = await UpdateLock.WaitAsync(0).ConfigureAwait(false);
+            var acquired = await UpdateLock.WaitAsync(0);
             if (!acquired)
             {
                 throw new ThrottlingException("An update is already running.");
@@ -43,7 +43,7 @@ namespace Knapcode.ConnectorRide.Core
                     throw new ThrottlingException("An update occurred too recently.");
                 }
 
-                var result = await _innerRecorder.RecordAsync(request).ConfigureAwait(false);
+                var result = await _innerRecorder.RecordAsync(request);
                 LastUpdate = _systemTime.UtcNow;
                 return result;
             }

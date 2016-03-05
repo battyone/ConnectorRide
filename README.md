@@ -32,8 +32,7 @@ The data is available under the [GitHub releases](https://github.com/joelverhage
 
 ## Future
 
-1. Identify the scraper HTTP requests with a relevant user agent.
-1. Automatically update the data when it changes.
+1. Make the data available in a better form than GitHub releases.
 1. Scrape [msshuttle.mobi](http://msshuttle.mobi).
 1. Run a [OneBusAway server](https://github.com/OneBusAway/onebusaway/wiki/Running-Onebusaway).
 1. Run an [OpenTripPlanner server](http://www.opentripplanner.org/). 

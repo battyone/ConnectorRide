@@ -4,11 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using AngleSharp;
 using AngleSharp.Dom;
 using AngleSharp.Dom.Html;
 using AngleSharp.Io.Network;
+using AngleSharp.Network;
 using AngleSharp.Services.Default;
 using Knapcode.ConnectorRide.Core.ClientModels;
 using Newtonsoft.Json;
@@ -21,6 +23,7 @@ namespace Knapcode.ConnectorRide.Core
         Task<ScheduleReference[]> GetScheduleReferencesAsync();
         Task<Schedule> GetScheduleAsync(ScheduleReference reference);
         Task<Map> GetMapAsync(MapReference reference);
+        string Version { get; }
     }
 
     public class Client : IClient
@@ -48,7 +51,7 @@ namespace Knapcode.ConnectorRide.Core
 
         public async Task<ScheduleReference[]> GetScheduleReferencesAsync()
         {
-            var document = await _lazyContext.Value.OpenAsync("https://www.connectorride.mobi/Schedules").ConfigureAwait(false);
+            var document = await GetDocumentAsync("https://www.connectorride.mobi/Schedules");
 
             return document
                 .QuerySelectorAll("a[href]")
@@ -61,7 +64,7 @@ namespace Knapcode.ConnectorRide.Core
         public async Task<Schedule> GetScheduleAsync(ScheduleReference reference)
         {
             // get the schedule page
-            var scheduleDocument = await _lazyContext.Value.OpenAsync(reference.Href).ConfigureAwait(false);
+            var scheduleDocument = await GetDocumentAsync(reference.Href);
 
             // extract the name
             var name = ExtractName(reference, scheduleDocument);
@@ -79,7 +82,7 @@ namespace Knapcode.ConnectorRide.Core
         public async Task<Map> GetMapAsync(MapReference reference)
         {
             // get the map page
-            var mapDocument = await _lazyContext.Value.OpenAsync(reference.Href).ConfigureAwait(false);
+            var mapDocument = await GetDocumentAsync(reference.Href);
 
             // extract the polyline
             var polylineScript = mapDocument
@@ -115,6 +118,8 @@ namespace Knapcode.ConnectorRide.Core
                 Polyline = polyline
             };
         }
+
+        public string Version { get; } = "3.1.0";
 
         private static string ExtractName(ScheduleReference reference, IDocument scheduleDocument)
         {
@@ -231,5 +236,17 @@ namespace Knapcode.ConnectorRide.Core
 
             return BrowsingContext.New(configuration);
         }
+
+        public async Task<IDocument> GetDocumentAsync(string url)
+        {
+            var request = DocumentRequest.Get(Url.Create(url));
+            request.Headers["User-Agent"] = UserAgent;
+            return await _lazyContext.Value.OpenAsync(request, CancellationToken.None);
+        }
+
+        private string UserAgent => "Mozilla/5.0 " +
+                                    "(compatible; " +
+                                    $"ConnectorRide/{Version}; " +
+                                    "+https://github.com/joelverhagen/ConnectorRide)";
     }
 }

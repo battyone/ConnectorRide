@@ -61,7 +61,7 @@ namespace Knapcode.ConnectorRide.Core
             using (var jsonWriter = new JsonTextWriter(textWriter))
             {
                 var writer = new JsonScrapeResultWriter(jsonWriter);
-                await _scraper.RealTimeScrapeAsync(writer).ConfigureAwait(false);
+                await _scraper.RealTimeScrapeAsync(writer);
             }
 
             resultStream.Seek(0, SeekOrigin.Begin);
@@ -88,7 +88,7 @@ namespace Knapcode.ConnectorRide.Core
             // upload
             using (resultStream)
             {
-                return await _uniqueClient.UploadAsync(uploadRequest).ConfigureAwait(false);
+                return await _uniqueClient.UploadAsync(uploadRequest);
             }
         }
     }

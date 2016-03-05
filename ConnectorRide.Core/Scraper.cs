@@ -14,7 +14,6 @@ namespace Knapcode.ConnectorRide.Core
 
     public class Scraper : IScraper
     {
-        private const string Version = "3.1.0";
         private readonly ISystemTime _systemTime;
         private readonly IClient _client;
 
@@ -28,13 +27,13 @@ namespace Knapcode.ConnectorRide.Core
         {
             var startTime = _systemTime.UtcNow;
 
-            var scheduleReferences = await _client.GetScheduleReferencesAsync().ConfigureAwait(false);
+            var scheduleReferences = await _client.GetScheduleReferencesAsync();
             var schedules = new List<Schedule>();
 
             foreach (var scheduleReference in scheduleReferences)
             {
-                var clientSchedule = await _client.GetScheduleAsync(scheduleReference).ConfigureAwait(false);
-                var map = await _client.GetMapAsync(clientSchedule.MapReference).ConfigureAwait(false);
+                var clientSchedule = await _client.GetScheduleAsync(scheduleReference);
+                var map = await _client.GetMapAsync(clientSchedule.MapReference);
 
                 schedules.Add(new Schedule
                 {
@@ -46,7 +45,7 @@ namespace Knapcode.ConnectorRide.Core
 
             return new ScrapeResult
             {
-                Version = Version,
+                Version = _client.Version,
                 StartTime = startTime,
                 Schedules = schedules,
                 EndTime = _systemTime.UtcNow
@@ -56,20 +55,20 @@ namespace Knapcode.ConnectorRide.Core
         public async Task RealTimeScrapeAsync(IScrapeResultWriter writer)
         {
             writer.WriteStart();
-            writer.WriteVersion(Version);
+            writer.WriteVersion(_client.Version);
             writer.WriteStartTime(_systemTime.UtcNow);
             writer.WriteStartSchedules();
 
-            var scheduleReferences = await _client.GetScheduleReferencesAsync().ConfigureAwait(false);
+            var scheduleReferences = await _client.GetScheduleReferencesAsync();
             foreach (var scheduleReference in scheduleReferences)
             {
                 writer.WriteStartSchedule();
 
-                var schedule = await _client.GetScheduleAsync(scheduleReference).ConfigureAwait(false);
+                var schedule = await _client.GetScheduleAsync(scheduleReference);
                 writer.WriteScheduleName(schedule.Name);
                 writer.WriteScheduleTable(schedule.Table);
 
-                var map = await _client.GetMapAsync(schedule.MapReference).ConfigureAwait(false);
+                var map = await _client.GetMapAsync(schedule.MapReference);
                 writer.WriteScheduleMap(map);
                 writer.WriteEndSchedule();
             }
