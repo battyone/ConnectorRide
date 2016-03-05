@@ -42,7 +42,6 @@ namespace Knapcode.ConnectorRide.Tool
 
                 // act
                 await connectorScraper.RealTimeScrapeAsync(writer).ConfigureAwait(false);
-                Console.WriteLine();
                 return 0;
             }
 
@@ -76,7 +75,6 @@ namespace Knapcode.ConnectorRide.Tool
 
                 // act
                 await collapser.CollapseAsync(request);
-                Console.WriteLine();
                 return 0;
             }
 
