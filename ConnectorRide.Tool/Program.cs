@@ -17,7 +17,6 @@ namespace Knapcode.ConnectorRide.Tool
     {
         public static int Main(string[] args)
         {
-            args = new[] {"collapse", "-s", "UseDevelopmentStorage=true", "-c", "scrape", "-t", "ScrapeResult", "-f", "schedules/{0}.json" };
             return MainAsync(args).Result;
         }
 
