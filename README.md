@@ -19,20 +19,27 @@ If this is a problem, I'll gladly take the project down. Just contact me using t
 The data is retrieved by scraping information from the Microsoft Connector routes website. The information is then make available in three formats:
 
 1. A JSON document that contains is all of the data scraped from the [Connector website](http://connectorride.mobi). The intent of this document is be as close to the original form as possible while still being convenient to code against. 
-1. A GTFS feed .zip archive (generated from #1, the JSON document) where AM and PM routes are combined into a single route.
-1. A GTFS feed .zip archive (also generated from #1) where AM and PM routes are not combined.
+1. A GTFS feed .zip archive (generated from #1, the JSON document) where AM and PM routes are grouped into a single route.
+1. A GTFS feed .zip archive (also generated from #1) where AM and PM routes are not grouped.
 
 Currently, all of the required GTFS files are included in the feed as well as one optional file (shapes.txt). The feed passes validation using [FeedValidator](https://github.com/google/transitfeed/wiki/FeedValidator).
 
+## Example
+
+This is what the GTFS data looks like in the `schedule_viewer` tool (available in [FeedValidator](https://github.com/google/transitfeed/wiki/FeedValidator)).
+
 ## Data
 
-The data is available under the [GitHub releases](https://github.com/joelverhagen/ConnectorRide/releases).
+The data is availabe in Azure Blob Storage. The link provided below will always point to the latest available data for each of the formats mentioned above:
 
-- [March 1, 2016](https://github.com/joelverhagen/ConnectorRide/releases/tag/20160301)
+Format           | Latest URL
+---------------- | ----------------------------------------------------------------------------
+JSON             | https://connectorride.blob.core.windows.net/scrape/schedules/latest.zip
+GTFS             | https://connectorride.blob.core.windows.net/scrape/gtfs/latest.zip
+GTFS (ungrouped) | https://connectorride.blob.core.windows.net/scrape/gtfs-ungrouped/latest.zip
 
 ## Future
 
-1. Make the data available in a better form than GitHub releases.
 1. Scrape [msshuttle.mobi](http://msshuttle.mobi).
 1. Run a [OneBusAway server](https://github.com/OneBusAway/onebusaway/wiki/Running-Onebusaway).
 1. Run an [OpenTripPlanner server](http://www.opentripplanner.org/). 
