@@ -26,7 +26,9 @@ Currently, all of the required GTFS files are included in the feed as well as on
 
 ## Example
 
-This is what the GTFS data looks like in the `schedule_viewer` tool (available in [FeedValidator](https://github.com/google/transitfeed/wiki/FeedValidator)).
+This is what the GTFS data looks like in the `schedule_viewer` tool (available in the [FeedValidator](https://github.com/google/transitfeed/wiki/FeedValidator) release).
+
+![Example GTFS](https://github.com/joelverhagen/ConnectorRide/blob/master/example-gtfs.png?raw=true)
 
 ## Data
 
