@@ -54,8 +54,7 @@ namespace Knapcode.ConnectorRide.Tool
                 switch (options.ComparisonType)
                 {
                     case ComparisonType.ScrapeResult:
-                        var serializer = new ScrapeResultSerializer();
-                        comparer = new ScrapeResultEqualityComparer(serializer);
+                        comparer = new ScrapeResultEqualityComparer();
                         break;
 
                     default:

@@ -1,29 +1,34 @@
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Knapcode.ToStorage.Core;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Knapcode.ConnectorRide.Core
 {
     public class ScrapeResultEqualityComparer : IAsyncEqualityComparer<Stream>
     {
-        private readonly IScrapeResultSerializer _serializer;
-
-        public ScrapeResultEqualityComparer(IScrapeResultSerializer serializer)
-        {
-            _serializer = serializer;
-        }
-        
         public async Task<bool> EqualsAsync(Stream x, Stream y, CancellationToken cancellationToken)
         {
-            var oldResult = await _serializer.DeserializeAsync(x, true);
-            var newResult = await _serializer.DeserializeAsync(y, true);
+            await Task.Yield();
 
-            var oldJson = JsonConvert.SerializeObject(oldResult.Schedules);
-            var newJson = JsonConvert.SerializeObject(newResult.Schedules);
+            using (var readerX = new StreamReader(x, Encoding.UTF8, false, 4096, true))
+            using (var readerY = new StreamReader(y, Encoding.UTF8, false, 4096, true))
+            using (var jsonReaderX = new JsonTextReader(readerX))
+            using (var jsonReaderY = new JsonTextReader(readerY))
+            {
+                var jsonX = JToken.ReadFrom(jsonReaderX);
+                var jsonY = JToken.ReadFrom(jsonReaderY);
 
-            return oldJson == newJson;
+                if (jsonX["Version"]?.ToString() == jsonY["Version"]?.ToString())
+                {
+                    return jsonX["Schedules"].ToString() == jsonY["Schedules"].ToString();
+                }
+
+                return false;
+            }
         }
     }
 }

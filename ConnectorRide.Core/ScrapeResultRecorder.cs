@@ -78,7 +78,7 @@ namespace Knapcode.ConnectorRide.Core
                 UploadDirect = true,
                 EqualsAsync = async x =>
                 {
-                    var comparer = new ScrapeResultEqualityComparer(_serializer);
+                    var comparer = new ScrapeResultEqualityComparer();
                     var equals = await comparer.EqualsAsync(x.Stream, resultStream, CancellationToken.None);
                     resultStream.Seek(0, SeekOrigin.Begin);
                     return equals;
