@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
+﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Knapcode.ConnectorRide.Core.RecorderModels;
 using Knapcode.ConnectorRide.Core.ScraperModels;
-using Knapcode.ToStorage.Core;
 using Knapcode.ToStorage.Core.AzureBlobStorage;
 using IStorageClient = Knapcode.ToStorage.Core.AzureBlobStorage.IClient;
 
@@ -53,7 +49,8 @@ namespace Knapcode.ConnectorRide.Core
                     Trace = TextWriter.Null,
                     EqualsAsync = async x =>
                     {
-                        var equals = await ZipArchiveEqualsAsync(resultStream, x.Stream);
+                        var comparer = new ZipArchiveCollapserComparer();
+                        var equals = await comparer.EqualsAsync(null, resultStream, null, x.Stream, CancellationToken.None);
                         resultStream.Seek(0, SeekOrigin.Begin);
                         return equals;
                     }
@@ -76,35 +73,6 @@ namespace Knapcode.ConnectorRide.Core
 
             var result = await _storageClient.GetLatestStreamAsync(getLatestRequest);
             return result?.Stream;
-        }
-
-        private async Task<bool> ZipArchiveEqualsAsync(Stream x, Stream y)
-        {
-            var streamComparer = new AsyncStreamEqualityComparer();
-            using (var zipX = new ZipArchive(x, ZipArchiveMode.Read, true))
-            using (var zipY = new ZipArchive(y, ZipArchiveMode.Read, true))
-            {
-                var entriesX = new HashSet<string>(zipX.Entries.Select(e => e.FullName));
-                var entriesY = new HashSet<string>(zipY.Entries.Select(e => e.FullName));
-                if (!entriesX.SetEquals(entriesY))
-                {
-                    return false;
-                }
-
-                foreach (var entry in entriesX)
-                {
-                    using (var entryX = zipX.GetEntry(entry).Open())
-                    using (var entryY = zipY.GetEntry(entry).Open())
-                    {
-                        if (!await streamComparer.EqualsAsync(entryX, entryY, CancellationToken.None))
-                        {
-                            return false;
-                        }
-                    }
-                }
-            }
-
-            return true;
         }
     }
 }

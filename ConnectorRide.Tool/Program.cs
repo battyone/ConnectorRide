@@ -1,32 +1,86 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using CommandLine;
+using CommandLine.Text;
 using Knapcode.ConnectorRide.Core;
 using Knapcode.ConnectorRide.Core.Abstractions;
+using Knapcode.ToStorage.Core;
+using Knapcode.ToStorage.Core.AzureBlobStorage;
 using Newtonsoft.Json;
+using Client = Knapcode.ConnectorRide.Core.Client;
 
 namespace Knapcode.ConnectorRide.Tool
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            MainAsync(args).Wait();
+            args = new[] {"collapse", "-s", "UseDevelopmentStorage=true", "-c", "scrape", "-t", "ScrapeResult", "-f", "schedules/{0}.json" };
+            return MainAsync(args).Result;
         }
 
-        private static async Task MainAsync(string[] args)
+        private static async Task<int> MainAsync(string[] args)
         {
-            // initialize
-            var systemTime = new SystemTime();
-            var httpClient = new HttpClient();
-            var connectorClient = new Client(httpClient);
-            var connectorScraper = new Scraper(systemTime, connectorClient);
-            var jsonWriter = new JsonTextWriter(Console.Out);
-            var writer = new JsonScrapeResultWriter(jsonWriter);
+            var result = Parser.Default.ParseArguments<ScrapeOptions, CollapseOptions>(args);
+            if (result.Tag == ParserResultType.NotParsed)
+            {
+                return 1;
+            }
 
-            // scrape
-            await connectorScraper.RealTimeScrapeAsync(writer).ConfigureAwait(false);
-            Console.WriteLine();
+            var parsedResult = (Parsed<object>) result;
+
+            if (parsedResult.Value is ScrapeOptions)
+            {
+                // initialize
+                var systemTime = new SystemTime();
+                var httpClient = new HttpClient();
+                var connectorClient = new Client(httpClient);
+                var connectorScraper = new Scraper(systemTime, connectorClient);
+                var jsonWriter = new JsonTextWriter(Console.Out);
+                var writer = new JsonScrapeResultWriter(jsonWriter);
+
+                // act
+                await connectorScraper.RealTimeScrapeAsync(writer).ConfigureAwait(false);
+                Console.WriteLine();
+                return 0;
+            }
+
+            if (parsedResult.Value is CollapseOptions)
+            {
+                // initialize
+                var options = (CollapseOptions) parsedResult.Value;
+                var pathBuilder = new PathBuilder();
+                var collapser = new Collapser(pathBuilder);
+                ICollapserComparer comparer;
+                switch (options.ComparisonType)
+                {
+                    case ComparisonType.ScrapeResult:
+                        var serializer = new ScrapeResultSerializer();
+                        comparer = new ScrapeResultCollapserComparer(serializer);
+                        break;
+
+                    default:
+                        comparer = new ZipArchiveCollapserComparer();
+                        break;
+                }
+
+                var request = new CollapseRequest
+                {
+                    ConnectionString = options.ConnectionString,
+                    PathFormat = options.PathFormat,
+                    Container = options.Container,
+                    Trace = Console.Out,
+                    Comparer = comparer
+                };
+
+                // act
+                await collapser.CollapseAsync(request);
+                Console.WriteLine();
+                return 0;
+            }
+
+            return 0;
         }
     }
 }

@@ -78,14 +78,10 @@ namespace Knapcode.ConnectorRide.Core
                 UploadDirect = true,
                 EqualsAsync = async x =>
                 {
-                    var oldResult = await _serializer.DeserializeAsync(x.Stream, true);
-                    var newResult = await _serializer.DeserializeAsync(resultStream, true);
+                    var comparer = new ScrapeResultCollapserComparer(_serializer);
+                    var equals = await comparer.EqualsAsync(null, x.Stream, null, resultStream, CancellationToken.None);
                     resultStream.Seek(0, SeekOrigin.Begin);
-
-                    var oldJson = JsonConvert.SerializeObject(oldResult.Schedules);
-                    var newJson = JsonConvert.SerializeObject(newResult.Schedules);
-
-                    return oldJson == newJson;
+                    return equals;
                 }
             };
 

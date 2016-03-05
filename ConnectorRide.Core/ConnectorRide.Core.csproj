@@ -112,6 +112,7 @@
     <Compile Include="GtfsModels\WheelchairBoarding.cs" />
     <Compile Include="IScrapeResultWriter.cs" />
     <Compile Include="JsonScrapeResultWriter.cs" />
+    <Compile Include="ScrapeResultCollapserComparer.cs" />
     <Compile Include="ScrapeResultRecorder.cs" />
     <Compile Include="RecorderModels\RecordRequest.cs" />
     <Compile Include="ScrapeResultSerializer.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="ClientModels\TableTrip.cs" />
     <Compile Include="ThrottledScrapeResultRecorder.cs" />
     <Compile Include="RecorderModels\ThrottlingException.cs" />
+    <Compile Include="ZipArchiveCollapserComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
