@@ -83,7 +83,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Abstractions\SystemTime.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="ClientModels\Location.cs" />
     <Compile Include="ClientModels\Polyline.cs" />

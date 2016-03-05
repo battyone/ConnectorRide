@@ -5,13 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Knapcode.ConnectorRide.Core;
-using Knapcode.ConnectorRide.Core.Abstractions;
 using Knapcode.ConnectorRide.Core.RecorderModels;
 using Knapcode.ConnectorRide.Core.ScraperModels;
+using Knapcode.ToStorage.Core.Abstractions;
 using Knapcode.ToStorage.Core.AzureBlobStorage;
 using Client = Knapcode.ConnectorRide.Core.Client;
 using StorageClient = Knapcode.ToStorage.Core.AzureBlobStorage.Client;
-using StorageSystemTime = Knapcode.ToStorage.Core.Abstractions.SystemTime;
 
 namespace Knapcode.ConnectorRide.Web.Controllers
 {
@@ -29,9 +28,8 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             var client = new Client(httpClient);
             var scraper = new Scraper(systemTime, client);
             var serializer = new ScrapeResultSerializer();
-            var storageSystemTime = new StorageSystemTime();
             var pathBuilder = new PathBuilder();
-            var storageClient = new StorageClient(storageSystemTime, pathBuilder);
+            var storageClient = new StorageClient(systemTime, pathBuilder);
             var uniqueClient = new UniqueClient(storageClient);
             _scrapeResultRecorder = new ScrapeResultRecorder(scraper, serializer, storageClient, uniqueClient);
             _throttledScrapeResultRecorder = new ThrottledScrapeResultRecorder(systemTime, _scrapeResultRecorder);

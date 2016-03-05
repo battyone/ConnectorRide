@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Knapcode.ConnectorRide.Core.Abstractions;
 using Knapcode.ConnectorRide.Core.ScraperModels;
+using Knapcode.ToStorage.Core.Abstractions;
 using Schedule = Knapcode.ConnectorRide.Core.ScraperModels.Schedule;
 
 namespace Knapcode.ConnectorRide.Core

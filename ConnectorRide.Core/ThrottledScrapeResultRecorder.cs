@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Knapcode.ConnectorRide.Core.Abstractions;
 using Knapcode.ConnectorRide.Core.RecorderModels;
+using Knapcode.ToStorage.Core.Abstractions;
 using Knapcode.ToStorage.Core.AzureBlobStorage;
 
 namespace Knapcode.ConnectorRide.Core
