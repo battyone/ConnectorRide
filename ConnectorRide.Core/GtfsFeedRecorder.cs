@@ -49,8 +49,8 @@ namespace Knapcode.ConnectorRide.Core
                     Trace = TextWriter.Null,
                     EqualsAsync = async x =>
                     {
-                        var comparer = new ZipArchiveCollapserComparer();
-                        var equals = await comparer.EqualsAsync(null, resultStream, null, x.Stream, CancellationToken.None);
+                        var comparer = new ZipArchiveEqualityComparer();
+                        var equals = await comparer.EqualsAsync(resultStream, x.Stream, CancellationToken.None);
                         resultStream.Seek(0, SeekOrigin.Begin);
                         return equals;
                     }

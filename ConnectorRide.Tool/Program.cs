@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CommandLine;
@@ -52,16 +53,16 @@ namespace Knapcode.ConnectorRide.Tool
                 var options = (CollapseOptions) parsedResult.Value;
                 var pathBuilder = new PathBuilder();
                 var collapser = new Collapser(pathBuilder);
-                ICollapserComparer comparer;
+                IAsyncEqualityComparer<Stream> comparer;
                 switch (options.ComparisonType)
                 {
                     case ComparisonType.ScrapeResult:
                         var serializer = new ScrapeResultSerializer();
-                        comparer = new ScrapeResultCollapserComparer(serializer);
+                        comparer = new ScrapeResultEqualityComparer(serializer);
                         break;
 
                     default:
-                        comparer = new ZipArchiveCollapserComparer();
+                        comparer = new ZipArchiveEqualityComparer();
                         break;
                 }
 
@@ -71,7 +72,7 @@ namespace Knapcode.ConnectorRide.Tool
                     PathFormat = options.PathFormat,
                     Container = options.Container,
                     Trace = Console.Out,
-                    Comparer = comparer
+                    Comparer = new AdapterCollapserComparer(StringComparer.Ordinal, comparer)
                 };
 
                 // act

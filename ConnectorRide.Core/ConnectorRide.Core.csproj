@@ -44,7 +44,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Knapcode.ToStorage.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Knapcode.ToStorage.Core.0.6.0\lib\net45\Knapcode.ToStorage.Core.dll</HintPath>
+      <HintPath>..\packages\Knapcode.ToStorage.Core.0.7.0\lib\net45\Knapcode.ToStorage.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -112,7 +112,7 @@
     <Compile Include="GtfsModels\WheelchairBoarding.cs" />
     <Compile Include="IScrapeResultWriter.cs" />
     <Compile Include="JsonScrapeResultWriter.cs" />
-    <Compile Include="ScrapeResultCollapserComparer.cs" />
+    <Compile Include="ScrapeResultEqualityComparer.cs" />
     <Compile Include="ScrapeResultRecorder.cs" />
     <Compile Include="RecorderModels\RecordRequest.cs" />
     <Compile Include="ScrapeResultSerializer.cs" />
@@ -131,7 +131,7 @@
     <Compile Include="ClientModels\TableTrip.cs" />
     <Compile Include="ThrottledScrapeResultRecorder.cs" />
     <Compile Include="RecorderModels\ThrottlingException.cs" />
-    <Compile Include="ZipArchiveCollapserComparer.cs" />
+    <Compile Include="ZipArchiveEqualityComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
