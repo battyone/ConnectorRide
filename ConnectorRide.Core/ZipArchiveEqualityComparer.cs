@@ -12,7 +12,8 @@ namespace Knapcode.ConnectorRide.Core
     {
         public async Task<bool> EqualsAsync(Stream x, Stream y, CancellationToken cancellationToken)
         {
-            var streamComparer = new AsyncStreamEqualityComparer();
+            var streamComparer = new OrdinalStreamEqualityComparer();
+
             using (var zipX = new ZipArchive(x, ZipArchiveMode.Read, true))
             using (var zipY = new ZipArchive(y, ZipArchiveMode.Read, true))
             {
