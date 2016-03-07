@@ -4,7 +4,7 @@ Microsoft Connector routes in simple JSON and [GTFS](https://developers.google.c
 
 ## Notice
 
-**This project is not affiliated with Microsoft in any way.** The Microsoft Connector buses themselves are intended for only Microsoft employees. I don't run the Connector Ride website or make any of the rules. I just wanted to the data that is already publicly visible to be more convenient for developers. This project should not be considered the official source of Microsoft Connector data.
+**This project is not affiliated with Microsoft in any way.** The Microsoft Connector buses themselves are only intended for Microsoft employees. I don't run the Connector Ride website or make any of the rules. I just wanted to make data that is already publicly visible more convenient for developers. This project should not be considered the official source of Microsoft Connector data.
 
 If this is a problem, I'll gladly take the project down. Just contact me using the email address on [my website](http://joelverhagen.com/).
 
