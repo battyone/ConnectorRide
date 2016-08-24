@@ -56,7 +56,7 @@ namespace Knapcode.ConnectorRide.Core
             return document
                 .QuerySelectorAll("a[href]")
                 .OfType<IHtmlAnchorElement>()
-                .Where(a => a.Href.Contains("Schedules/Schedule?name="))
+                .Where(a => a.Href.Contains("Schedules/Schedule2?name="))
                 .Select(a => new ScheduleReference { Href = a.Href })
                 .ToArray();
         }
@@ -119,7 +119,7 @@ namespace Knapcode.ConnectorRide.Core
             };
         }
 
-        public string Version { get; } = "3.1.0";
+        public string Version { get; } = "3.2.0";
 
         private static string ExtractName(ScheduleReference reference, IDocument scheduleDocument)
         {
@@ -139,6 +139,7 @@ namespace Knapcode.ConnectorRide.Core
                 .QuerySelectorAll("h2+div table")
                 .OfType<IHtmlTableElement>()
                 .FirstOrDefault();
+
             if (scheduleTable == null)
             {
                 throw new ConnectorRideException($"The schedule table could not be found on the schedule page: {reference.Href}");
@@ -146,6 +147,7 @@ namespace Knapcode.ConnectorRide.Core
 
             var stops = scheduleTable
                 .QuerySelectorAll("th")
+                .Where(headerCell => !headerCell.ClassList.Contains("IsHeading"))
                 .Select(headerCell => new TableStop
                 {
                     Name = headerCell.TextContent.Trim(),
@@ -154,48 +156,58 @@ namespace Knapcode.ConnectorRide.Core
                 })
                 .ToList();
 
-            var rows = scheduleTable
-                .QuerySelectorAll("tbody tr")
-                .ToArray();
             var trips = new List<TableTrip>();
-            foreach (var row in rows)
+
+            var rows = scheduleTable
+                   .Children
+                   .FirstOrDefault(x => x.NodeName == "TBODY")?
+                   .Children?
+                   .Where(x => x.NodeName == "TR")?
+                   .ToArray();
+            
+            if (rows != null)
             {
-                var cells = row
-                    .QuerySelectorAll("td")
-                    .OfType<IHtmlTableDataCellElement>()
-                    .ToArray();
-
-                if (cells.Length != stops.Count)
+                foreach (var row in rows)
                 {
-                    throw new ConnectorRideException($"One of rows of the schedule table does not have the right number of columns on the schedule page: {reference.Href}");
-                }
+                    var cells = row
+                        .Children
+                        .Where(x => x.NodeName == "TD")
+                        .OfType<IHtmlTableDataCellElement>()
+                        .Skip(1)
+                        .ToArray();
 
-                var stopTimes = new List<TableStopTime>();
-                for (int i = 0; i < cells.Length; i++)
-                {
-                    var cellText = cells[i].TextContent.Trim();
-                    if (cellText == "----")
+                    if (cells.Length != stops.Count)
                     {
-                        continue;
+                        throw new ConnectorRideException($"One of rows of the schedule table does not have the right number of columns on the schedule page: {reference.Href}");
                     }
 
-                    var stopTimeMatch = StopTimeRegex.Match(cellText);
-                    int hour = int.Parse(stopTimeMatch.Groups["Hour"].Value);
-                    int minute = int.Parse(stopTimeMatch.Groups["Minute"].Value);
-                    string period = stopTimeMatch.Groups["Period"].Value.ToUpper();
-
-                    stopTimes.Add(new TableStopTime
+                    var stopTimes = new List<TableStopTime>();
+                    for (int i = 0; i < cells.Length; i++)
                     {
-                        StopName = stops[i].Name,
-                        Hour = period == "PM" ? hour + 12 : hour,
-                        Minute = minute
+                        var cellText = cells[i].TextContent.Trim();
+                        if (cellText == "----")
+                        {
+                            continue;
+                        }
+
+                        var stopTimeMatch = StopTimeRegex.Match(cellText);
+                        int hour = int.Parse(stopTimeMatch.Groups["Hour"].Value);
+                        int minute = int.Parse(stopTimeMatch.Groups["Minute"].Value);
+                        string period = stopTimeMatch.Groups["Period"].Value.ToUpper();
+
+                        stopTimes.Add(new TableStopTime
+                        {
+                            StopName = stops[i].Name,
+                            Hour = period == "PM" ? hour + 12 : hour,
+                            Minute = minute
+                        });
+                    }
+
+                    trips.Add(new TableTrip
+                    {
+                        StopTimes = stopTimes.ToArray()
                     });
                 }
-
-                trips.Add(new TableTrip
-                {
-                    StopTimes = stopTimes.ToArray()
-                });
             }
 
             return new Table
