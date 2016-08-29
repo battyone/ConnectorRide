@@ -39,6 +39,7 @@ Format           | Latest URL
 JSON             | https://connectorride.blob.core.windows.net/scrape/schedules/latest.json
 GTFS             | https://connectorride.blob.core.windows.net/scrape/gtfs/latest.zip
 GTFS (ungrouped) | https://connectorride.blob.core.windows.net/scrape/gtfs-ungrouped/latest.zip
+Last Processed  | https://connectorride.blob.core.windows.net/scrape/schedules/latest-status.json
 
 ## Future
 
