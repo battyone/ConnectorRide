@@ -110,7 +110,12 @@
     <Compile Include="GtfsModels\WheelchairAccessible.cs" />
     <Compile Include="GtfsModels\WheelchairBoarding.cs" />
     <Compile Include="IScrapeResultWriter.cs" />
+    <Compile Include="IUploadStatusRecorder.cs" />
+    <Compile Include="IUploadStatusWriter.cs" />
+    <Compile Include="JsonUploadStatusWriter.cs" />
     <Compile Include="JsonScrapeResultWriter.cs" />
+    <Compile Include="RecorderModels\RecordResult.cs" />
+    <Compile Include="RecorderModels\UploadStatus.cs" />
     <Compile Include="ScrapeResultEqualityComparer.cs" />
     <Compile Include="ScrapeResultRecorder.cs" />
     <Compile Include="RecorderModels\RecordRequest.cs" />
@@ -130,6 +135,7 @@
     <Compile Include="ClientModels\TableTrip.cs" />
     <Compile Include="ThrottledScrapeResultRecorder.cs" />
     <Compile Include="RecorderModels\ThrottlingException.cs" />
+    <Compile Include="UploadStatusRecorder.cs" />
     <Compile Include="ZipArchiveEqualityComparer.cs" />
   </ItemGroup>
   <ItemGroup>

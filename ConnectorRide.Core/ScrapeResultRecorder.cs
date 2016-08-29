@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Knapcode.ConnectorRide.Core.RecorderModels;
 using Knapcode.ConnectorRide.Core.ScraperModels;
-using Knapcode.ToStorage.Core;
 using Knapcode.ToStorage.Core.AzureBlobStorage;
 using Newtonsoft.Json;
 using IStorageClient = Knapcode.ToStorage.Core.AzureBlobStorage.IClient;
@@ -13,7 +12,7 @@ namespace Knapcode.ConnectorRide.Core
 {
     public interface IScrapeResultRecorder
     {
-        Task<UploadResult> RecordAsync(RecordRequest request);
+        Task<RecordResult> RecordAsync(RecordRequest request);
         Task<ScrapeResult> GetLatestAsync(RecordRequest request);
     }
 
@@ -21,15 +20,17 @@ namespace Knapcode.ConnectorRide.Core
     {
         private readonly IScraper _scraper;
         private readonly IScrapeResultSerializer _serializer;
+        private readonly IUploadStatusRecorder _statusRecorder;
         private readonly IStorageClient _storageClient;
         private readonly IUniqueClient _uniqueClient;
 
-        public ScrapeResultRecorder(IScraper scraper, IScrapeResultSerializer serializer, IStorageClient storageClient, IUniqueClient uniqueClient)
+        public ScrapeResultRecorder(IScraper scraper, IScrapeResultSerializer serializer, IStorageClient storageClient, IUniqueClient uniqueClient, IUploadStatusRecorder statusRecorder)
         {
             _scraper = scraper;
             _serializer = serializer;
             _storageClient = storageClient;
             _uniqueClient = uniqueClient;
+            _statusRecorder = statusRecorder;
         }
         
         public async Task<ScrapeResult> GetLatestAsync(RecordRequest request)
@@ -37,7 +38,7 @@ namespace Knapcode.ConnectorRide.Core
             var getLatestRequest = new GetLatestRequest
             {
                 ConnectionString = request.StorageConnectionString,
-                PathFormat = request.PathFormat,
+                PathFormat = request.BlobPathFormat,
                 Container = request.StorageContainer,
                 Trace = TextWriter.Null
             };
@@ -53,7 +54,7 @@ namespace Knapcode.ConnectorRide.Core
             }
         }
 
-        public async Task<UploadResult> RecordAsync(RecordRequest request)
+        public async Task<RecordResult> RecordAsync(RecordRequest request)
         {
             // scrape
             var resultStream = new MemoryStream();
@@ -67,12 +68,12 @@ namespace Knapcode.ConnectorRide.Core
             resultStream.Seek(0, SeekOrigin.Begin);
 
             // initialize storage
-            var uploadRequest = new UniqueUploadRequest
+            var blobUploadRequest = new UniqueUploadRequest
             {
                 ConnectionString = request.StorageConnectionString,
                 Container = request.StorageContainer,
                 ContentType = "application/json",
-                PathFormat = request.PathFormat,
+                PathFormat = request.BlobPathFormat,
                 Stream = resultStream,
                 Trace = TextWriter.Null,
                 UploadDirect = true,
@@ -86,10 +87,20 @@ namespace Knapcode.ConnectorRide.Core
             };
 
             // upload
+            UploadResult blobUploadResult;
             using (resultStream)
             {
-                return await _uniqueClient.UploadAsync(uploadRequest);
+                blobUploadResult =  await _uniqueClient.UploadAsync(blobUploadRequest);
             }
+
+            // record status
+            var statusUploadResult = await _statusRecorder.RecordStatusAsync(blobUploadResult, request);
+
+            return new RecordResult
+            {
+                BlobUploadResult = blobUploadResult,
+                StatusUploadResult = statusUploadResult
+            };
         }
     }
 }

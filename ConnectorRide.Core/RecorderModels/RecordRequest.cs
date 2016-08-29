@@ -4,6 +4,7 @@ namespace Knapcode.ConnectorRide.Core.RecorderModels
     {
         public string StorageConnectionString { get; set; }
         public string StorageContainer { get; set; }
-        public string PathFormat { get; set; }
+        public string BlobPathFormat { get; set; }
+        public string StatusPathFormat { get; set; }
     }
 }

@@ -5,11 +5,14 @@ namespace Knapcode.ConnectorRide.Web
     public interface ISettings
     {
         string ScrapeResultPathFormat { get; }
+        string ScrapeResultStatusPathFormat { get; }
         TimeSpan SchedulesMaximumScrapeFrequency { get; }
         string StorageContainer { get; }
         string StorageConnectionString { get; }
         string GtfsFeedArchiveGroupedPathFormat { get; }
+        string GtfsFeedArchiveGroupedStatusPathFormat { get; }
         string GtfsFeedArchiveUngroupedPathFormat { get; }
+        string GtfsFeedArchiveUngroupedStatusPathFormat { get; }
     }
 
     public class Settings : ISettings
@@ -23,9 +26,15 @@ namespace Knapcode.ConnectorRide.Web
 
         public string ScrapeResultPathFormat => _provider.GetValue("ConnectorRide:ScrapeResult:PathFormat") ?? "schedules/{0}.json";
 
+        public string ScrapeResultStatusPathFormat => _provider.GetValue("ConnectorRide:ScrapeResult:StatusPathFormat") ?? "schedules/{0}-status.json";
+
         public string GtfsFeedArchiveGroupedPathFormat => _provider.GetValue("ConnectorRide:GtfsFeedArchive:GroupedPathFormat") ?? "gtfs/{0}.zip";
 
+        public string GtfsFeedArchiveGroupedStatusPathFormat => _provider.GetValue("ConnectorRide:GtfsFeedArchive:GroupedStatusPathFormat") ?? "gtfs/{0}-status.json";
+
         public string GtfsFeedArchiveUngroupedPathFormat => _provider.GetValue("ConnectorRide:GtfsFeedArchive:UngroupedPathFormat") ?? "gtfs-ungrouped/{0}.zip";
+
+        public string GtfsFeedArchiveUngroupedStatusPathFormat => _provider.GetValue("ConnectorRide:GtfsFeedArchive:UngroupedStatusPathFormat") ?? "gtfs-ungrouped/{0}-status.json";
 
         public TimeSpan SchedulesMaximumScrapeFrequency
         {

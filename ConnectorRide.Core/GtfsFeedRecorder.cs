@@ -10,7 +10,7 @@ namespace Knapcode.ConnectorRide.Core
 {
     public interface IGtfsFeedArchiveRecorder
     {
-        Task<UploadResult> RecordAsync(ScrapeResult scrapeResult, bool groupAmPm, RecordRequest request);
+        Task<RecordResult> RecordAsync(ScrapeResult scrapeResult, bool groupAmPm, RecordRequest request);
         Task<Stream> GetLatestAsync(RecordRequest request);
     }
 
@@ -20,16 +20,18 @@ namespace Knapcode.ConnectorRide.Core
         private readonly IUniqueClient _uniqueClient;
         private readonly IGtfsConverter _converter;
         private readonly IGtfsFeedSerializer _serializer;
+        private readonly IUploadStatusRecorder _statusRecorder;
 
-        public GtfsFeedArchiveRecorder(IStorageClient storageClient, IUniqueClient uniqueClient, IGtfsConverter converter, IGtfsFeedSerializer serializer)
+        public GtfsFeedArchiveRecorder(IStorageClient storageClient, IUniqueClient uniqueClient, IGtfsConverter converter, IGtfsFeedSerializer serializer, IUploadStatusRecorder statusRecorder)
         {
             _storageClient = storageClient;
             _uniqueClient = uniqueClient;
             _converter = converter;
             _serializer = serializer;
+            _statusRecorder = statusRecorder;
         }
 
-        public async Task<UploadResult> RecordAsync(ScrapeResult scrapeResult, bool groupAmPm, RecordRequest request)
+        public async Task<RecordResult> RecordAsync(ScrapeResult scrapeResult, bool groupAmPm, RecordRequest request)
         {
             using (var resultStream = new MemoryStream())
             {
@@ -43,7 +45,7 @@ namespace Knapcode.ConnectorRide.Core
                     ConnectionString = request.StorageConnectionString,
                     Stream = resultStream,
                     ContentType = "application/octet-stream",
-                    PathFormat = request.PathFormat,
+                    PathFormat = request.BlobPathFormat,
                     Container = request.StorageContainer,
                     UploadDirect = true,
                     Trace = TextWriter.Null,
@@ -57,7 +59,16 @@ namespace Knapcode.ConnectorRide.Core
                 };
 
                 // upload the .zip file
-                return await _uniqueClient.UploadAsync(uploadRequest);
+                var blobUploadResult = await _uniqueClient.UploadAsync(uploadRequest);
+
+                // record status
+                var statusUploadResult = await _statusRecorder.RecordStatusAsync(blobUploadResult, request);
+
+                return new RecordResult
+                {
+                    BlobUploadResult = blobUploadResult,
+                    StatusUploadResult = statusUploadResult
+                };
             }
         }
 
@@ -66,7 +77,7 @@ namespace Knapcode.ConnectorRide.Core
             var getLatestRequest = new GetLatestRequest
             {
                 ConnectionString = request.StorageConnectionString,
-                PathFormat = request.PathFormat,
+                PathFormat = request.BlobPathFormat,
                 Container = request.StorageContainer,
                 Trace = TextWriter.Null
             };

@@ -9,7 +9,7 @@ namespace Knapcode.ConnectorRide.Core
 {
     public interface IThrottledScrapeResultRecorder
     {
-        Task<UploadResult> RecordLatestAsync(TimeSpan maximumFrequency, RecordRequest request);
+        Task<RecordResult> RecordLatestAsync(TimeSpan maximumFrequency, RecordRequest request);
     }
 
     public class ThrottledScrapeResultRecorder : IThrottledScrapeResultRecorder
@@ -26,7 +26,7 @@ namespace Knapcode.ConnectorRide.Core
             _innerRecorder = innerRecorder;
         }
 
-        public async Task<UploadResult> RecordLatestAsync(TimeSpan maximumFrequency, RecordRequest request)
+        public async Task<RecordResult> RecordLatestAsync(TimeSpan maximumFrequency, RecordRequest request)
         {
             // mutex
             var acquired = await UpdateLock.WaitAsync(0);

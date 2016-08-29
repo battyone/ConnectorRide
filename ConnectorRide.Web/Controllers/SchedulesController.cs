@@ -31,12 +31,13 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             var pathBuilder = new PathBuilder();
             var storageClient = new StorageClient(systemTime, pathBuilder);
             var uniqueClient = new UniqueClient(storageClient);
-            _scrapeResultRecorder = new ScrapeResultRecorder(scraper, serializer, storageClient, uniqueClient);
+            var statusRecorder = new UploadStatusRecorder(storageClient, systemTime);
+            _scrapeResultRecorder = new ScrapeResultRecorder(scraper, serializer, storageClient, uniqueClient, statusRecorder);
             _throttledScrapeResultRecorder = new ThrottledScrapeResultRecorder(systemTime, _scrapeResultRecorder);
             var gtfsConverter = new GtfsConverter();
             var gtfsCsvSerializer = new GtfsCsvSerializer();
             var gtfsFeedSerializer = new GtfsFeedSerializer(gtfsCsvSerializer);
-            _gtfsFeedArchiveRecord = new GtfsFeedArchiveRecorder(storageClient, uniqueClient, gtfsConverter, gtfsFeedSerializer);
+            _gtfsFeedArchiveRecord = new GtfsFeedArchiveRecorder(storageClient, uniqueClient, gtfsConverter, gtfsFeedSerializer, statusRecorder);
             var settingsService = new SettingsProvider();
             _settings = new Settings(settingsService);
         }
@@ -46,7 +47,7 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             return await GetLatestGtfsFeedArchiveAsync(true);
         }
 
-        public async Task<UploadResult> UpdateGtfsFeedArchiveGroupedAsync()
+        public async Task<RecordResult> UpdateGtfsFeedArchiveGroupedAsync()
         {
             return await UpdateGtfsFeedArchiveAsync(true);
         }
@@ -56,7 +57,7 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             return await GetLatestGtfsFeedArchiveAsync(false);
         }
 
-        public async Task<UploadResult> UpdateGtfsFeedArchiveUngroupedAsync()
+        public async Task<RecordResult> UpdateGtfsFeedArchiveUngroupedAsync()
         {
             return await UpdateGtfsFeedArchiveAsync(false);
         }
@@ -76,7 +77,7 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             return latest;
         }
 
-        public async Task<UploadResult> UpdateScrapeResultAsync()
+        public async Task<RecordResult> UpdateScrapeResultAsync()
         {
             var request = GetScrapeResultRequest();
             return await _throttledScrapeResultRecorder.RecordLatestAsync(_settings.SchedulesMaximumScrapeFrequency, request);
@@ -107,7 +108,7 @@ namespace Knapcode.ConnectorRide.Web.Controllers
             };
         }
 
-        private async Task<UploadResult> UpdateGtfsFeedArchiveAsync(bool groupAmPm)
+        private async Task<RecordResult> UpdateGtfsFeedArchiveAsync(bool groupAmPm)
         {
             var scrapeResult = await GetLatestScrapeResultAsync();
             var request = GetGtfsFeedArchiveRequest(groupAmPm);
@@ -118,7 +119,8 @@ namespace Knapcode.ConnectorRide.Web.Controllers
         {
             return new RecordRequest
             {
-                PathFormat = _settings.ScrapeResultPathFormat,
+                BlobPathFormat = _settings.ScrapeResultPathFormat,
+                StatusPathFormat = _settings.ScrapeResultStatusPathFormat,
                 StorageConnectionString = _settings.StorageConnectionString,
                 StorageContainer = _settings.StorageContainer
             };
@@ -127,10 +129,12 @@ namespace Knapcode.ConnectorRide.Web.Controllers
         private RecordRequest GetGtfsFeedArchiveRequest(bool groupAmPm)
         {
             var pathFormat = groupAmPm ? _settings.GtfsFeedArchiveGroupedPathFormat : _settings.GtfsFeedArchiveUngroupedPathFormat;
+            var statusPathFormat = groupAmPm ? _settings.GtfsFeedArchiveGroupedStatusPathFormat : _settings.GtfsFeedArchiveUngroupedStatusPathFormat;
 
             return new RecordRequest
             {
-                PathFormat = pathFormat,
+                BlobPathFormat = pathFormat,
+                StatusPathFormat = statusPathFormat,
                 StorageConnectionString = _settings.StorageConnectionString,
                 StorageContainer = _settings.StorageContainer
             };
