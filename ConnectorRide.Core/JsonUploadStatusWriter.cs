@@ -1,5 +1,6 @@
 using Knapcode.ConnectorRide.Core.RecorderModels;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Knapcode.ConnectorRide.Core
 {
@@ -14,7 +15,7 @@ namespace Knapcode.ConnectorRide.Core
 
         public void Write(UploadStatus uploadStatus)
         {
-            _writer.WriteValue(uploadStatus);
+            JObject.FromObject(uploadStatus).WriteTo(_writer);
         }
     }
 }
