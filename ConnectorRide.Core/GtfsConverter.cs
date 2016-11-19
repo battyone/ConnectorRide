@@ -38,7 +38,7 @@ namespace Knapcode.ConnectorRide.Core
             return new GtfsFeed
             {
                 Agencies = new[] { context.Agency },
-                Stops = context.StopNames.Select(x => context.StopAndTableStops[x].Stop).ToArray(),
+                Stops = context.StopNames.Select(x => context.StopAndClientData[x].Stop).ToArray(),
                 Routes = context.RouteNames.Select(x => context.Routes[x]).ToArray(),
                 Trips = context.Trips.ToArray(),
                 StopTimes = context.StopTimes.ToArray(),
@@ -86,14 +86,14 @@ namespace Knapcode.ConnectorRide.Core
                 uint stopSequence = 0;
                 foreach (var tableStopTime in tableTrip.StopTimes)
                 {
-                    var stopAndTableStop = context.StopAndTableStops[tableStopTime.StopName];
+                    var stopAndClientData = context.StopAndClientData[tableStopTime.StopName];
                     var time = new Time(tableStopTime.Hour, tableStopTime.Minute, 0);
 
                     PickupType pickupType;
                     DropOffType dropOffType;
 
-                    if ((period == Period.Am && stopAndTableStop.TableStop.IsHub) ||
-                        (period == Period.Pm && !stopAndTableStop.TableStop.IsHub))
+                    if ((period == Period.Am && stopAndClientData.IsHub) ||
+                        (period == Period.Pm && !stopAndClientData.IsHub))
                     {
                         pickupType = PickupType.NoPickupAvailable;
                         dropOffType = DropOffType.RegularlyScheduled;
@@ -109,7 +109,7 @@ namespace Knapcode.ConnectorRide.Core
                         TripId = tripId,
                         ArrivalTime = time,
                         DepartureTime = time,
-                        StopId = stopAndTableStop.Stop.Id,
+                        StopId = stopAndClientData.Stop.Id,
                         Sequence = stopSequence,
                         PickupType = pickupType,
                         DropOffType = dropOffType
@@ -169,7 +169,7 @@ namespace Knapcode.ConnectorRide.Core
 
         private void ConvertStops(ConversionContext context)
         {
-            context.StopAndTableStops = new Dictionary<string, StopAndTableStop>();
+            context.StopAndClientData = new Dictionary<string, StopAndClientData>();
             context.StopNames = new List<string>();
 
             foreach (var pair in context.SchedulePairs)
@@ -190,30 +190,38 @@ namespace Knapcode.ConnectorRide.Core
         {
             foreach (var tableStop in schedule.Table.Stops)
             {
-                StopAndTableStop stopAndTableStop;
-                if (!context.StopAndTableStops.TryGetValue(tableStop.Name, out stopAndTableStop))
+                StopAndClientData stopAndClientData;
+                if (!context.StopAndClientData.TryGetValue(tableStop.Name, out stopAndClientData))
                 {
-                    context.StopAndTableStops[tableStop.Name] = new StopAndTableStop
+                    stopAndClientData = new StopAndClientData
                     {
-                        Stop = new Stop
-                        {
-                            Name = tableStop.Name
-                        },
-                        TableStop = tableStop
+                        Stop = new Stop { Name = tableStop.Name }
                     };
-
+                    context.StopAndClientData[tableStop.Name] = stopAndClientData;
                     context.StopNames.Add(tableStop.Name);
                 }
+                
+                stopAndClientData.IsHub = tableStop.IsHub;
             }
 
             foreach (var mapStop in schedule.Map.Stops)
             {
-                var stopAndTableStop = context.StopAndTableStops[mapStop.Name];
-
-                stopAndTableStop.Stop.Id = mapStop.Id.ToString();
-                stopAndTableStop.Stop.Desc = string.Join(", ", new[] {mapStop.Address, mapStop.City, mapStop.ZipCode}.Where(x => x != null));
-                stopAndTableStop.Stop.Lat = mapStop.Latitude;
-                stopAndTableStop.Stop.Lon = mapStop.Longitude;
+                StopAndClientData stopAndClientData;
+                if (!context.StopAndClientData.TryGetValue(mapStop.Name, out stopAndClientData))
+                {
+                    stopAndClientData = new StopAndClientData
+                    {
+                        Stop = new Stop { Name = mapStop.Name }
+                    };
+                    context.StopAndClientData[mapStop.Name] = stopAndClientData;
+                    context.StopNames.Add(mapStop.Name);
+                }
+                
+                stopAndClientData.IsHub = mapStop.IsHub;
+                stopAndClientData.Stop.Id = mapStop.Id.ToString();
+                stopAndClientData.Stop.Desc = string.Join(", ", new[] { mapStop.Address, mapStop.City, mapStop.ZipCode }.Where(x => x != null));
+                stopAndClientData.Stop.Lat = mapStop.Latitude;
+                stopAndClientData.Stop.Lon = mapStop.Longitude;
             }
         }
 
@@ -333,7 +341,7 @@ namespace Knapcode.ConnectorRide.Core
             public Service Service { get; set; }
             public Dictionary<Schedule, string> ShapeIds { get; set; }
             public List<ShapePoint> ShapePoints { get; set; }
-            public Dictionary<string, StopAndTableStop> StopAndTableStops { get; set; }
+            public Dictionary<string, StopAndClientData> StopAndClientData { get; set; }
             public List<string> StopNames { get; set; }
             public Dictionary<string, Route> Routes { get; set; } 
             public List<string> RouteNames { get; set; } 
@@ -341,10 +349,10 @@ namespace Knapcode.ConnectorRide.Core
             public List<StopTime> StopTimes { get; set; }
         }
 
-        public class StopAndTableStop
+        public class StopAndClientData
         {
             public Stop Stop { get; set; }
-            public TableStop TableStop { get; set; }
+            public bool IsHub { get; set; }
         }
 
         private class NameWithPeriod
