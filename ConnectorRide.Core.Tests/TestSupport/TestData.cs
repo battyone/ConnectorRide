@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using Knapcode.ConnectorRide.Common.Models;
 using Knapcode.ConnectorRide.Core.GtfsModels;
-using Knapcode.ConnectorRide.Core.ScraperModels;
 
 namespace Knapcode.ConnectorRide.Core.Tests.TestSupport
 {

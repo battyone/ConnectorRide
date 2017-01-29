@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Knapcode.ConnectorRide.Core.ScraperModels
+namespace Knapcode.ConnectorRide.Common.Models
 {
     public class ScrapeResult
     {

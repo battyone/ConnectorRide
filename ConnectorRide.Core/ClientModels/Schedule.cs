@@ -1,3 +1,5 @@
+using Knapcode.ConnectorRide.Common.Models;
+
 namespace Knapcode.ConnectorRide.Core.ClientModels
 {
     public class Schedule

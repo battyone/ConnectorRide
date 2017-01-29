@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Knapcode.ConnectorRide.Common.Models;
 using Knapcode.ConnectorRide.Core.RecorderModels;
-using Knapcode.ConnectorRide.Core.ScraperModels;
 using Knapcode.ToStorage.Core.AzureBlobStorage;
 using IStorageClient = Knapcode.ToStorage.Core.AzureBlobStorage.IClient;
 

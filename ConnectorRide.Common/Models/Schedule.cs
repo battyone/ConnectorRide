@@ -1,6 +1,4 @@
-using Knapcode.ConnectorRide.Core.ClientModels;
-
-namespace Knapcode.ConnectorRide.Core.ScraperModels
+namespace Knapcode.ConnectorRide.Common.Models
 {
     public class Schedule
     {

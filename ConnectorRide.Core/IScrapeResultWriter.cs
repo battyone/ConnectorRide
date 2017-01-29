@@ -1,5 +1,5 @@
 using System;
-using Knapcode.ConnectorRide.Core.ClientModels;
+using Knapcode.ConnectorRide.Common.Models;
 
 namespace Knapcode.ConnectorRide.Core
 {

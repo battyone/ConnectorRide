@@ -115,6 +115,10 @@
     <EmbeddedResource Include="TestData\ScrapeResult.json" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConnectorRide.Common\ConnectorRide.Common.csproj">
+      <Project>{b08353f1-a4e6-45f3-b004-95791bedfb0d}</Project>
+      <Name>ConnectorRide.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConnectorRide.Core\ConnectorRide.Core.csproj">
       <Project>{21ED1861-0AC6-49E3-BC9A-857DD89052E6}</Project>
       <Name>ConnectorRide.Core</Name>

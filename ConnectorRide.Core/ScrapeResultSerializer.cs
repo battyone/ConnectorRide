@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Knapcode.ConnectorRide.Core.ScraperModels;
+using Knapcode.ConnectorRide.Common.Models;
 using Newtonsoft.Json;
 
 namespace Knapcode.ConnectorRide.Core

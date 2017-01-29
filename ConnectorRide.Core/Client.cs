@@ -12,9 +12,11 @@ using AngleSharp.Dom.Html;
 using AngleSharp.Io.Network;
 using AngleSharp.Network;
 using AngleSharp.Services.Default;
+using Knapcode.ConnectorRide.Common.Models;
 using Knapcode.ConnectorRide.Core.ClientModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Schedule = Knapcode.ConnectorRide.Core.ClientModels.Schedule;
 
 namespace Knapcode.ConnectorRide.Core
 {

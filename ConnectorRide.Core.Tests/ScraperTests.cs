@@ -2,8 +2,8 @@
 using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Knapcode.ConnectorRide.Common.Models;
 using Knapcode.ConnectorRide.Core.ClientModels;
-using Knapcode.ConnectorRide.Core.ScraperModels;
 using Knapcode.ToStorage.Core.Abstractions;
 using Moq;
 using Newtonsoft.Json;

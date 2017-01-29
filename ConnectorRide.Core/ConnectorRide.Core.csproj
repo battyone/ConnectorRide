@@ -84,8 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
-    <Compile Include="ClientModels\Location.cs" />
-    <Compile Include="ClientModels\Polyline.cs" />
+    <Compile Include="ClientModels\Schedule.cs" />
     <Compile Include="ConnectorRideException.cs" />
     <Compile Include="GtfsConverter.cs" />
     <Compile Include="GtfsCsvSerializer.cs" />
@@ -120,19 +119,10 @@
     <Compile Include="ScrapeResultRecorder.cs" />
     <Compile Include="RecorderModels\RecordRequest.cs" />
     <Compile Include="ScrapeResultSerializer.cs" />
-    <Compile Include="ScraperModels\ScrapeResult.cs" />
-    <Compile Include="ScraperModels\Schedule.cs" />
     <Compile Include="ClientModels\MapReference.cs" />
-    <Compile Include="ClientModels\Map.cs" />
-    <Compile Include="ClientModels\Table.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ClientModels\Schedule.cs" />
     <Compile Include="ClientModels\ScheduleReference.cs" />
     <Compile Include="Scraper.cs" />
-    <Compile Include="ClientModels\MapStop.cs" />
-    <Compile Include="ClientModels\TableStop.cs" />
-    <Compile Include="ClientModels\TableStopTime.cs" />
-    <Compile Include="ClientModels\TableTrip.cs" />
     <Compile Include="ThrottledScrapeResultRecorder.cs" />
     <Compile Include="RecorderModels\ThrottlingException.cs" />
     <Compile Include="UploadStatusRecorder.cs" />
@@ -142,7 +132,12 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ConnectorRide.Common\ConnectorRide.Common.csproj">
+      <Project>{b08353f1-a4e6-45f3-b004-95791bedfb0d}</Project>
+      <Name>ConnectorRide.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

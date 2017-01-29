@@ -133,6 +133,10 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConnectorRide.Common\ConnectorRide.Common.csproj">
+      <Project>{b08353f1-a4e6-45f3-b004-95791bedfb0d}</Project>
+      <Name>ConnectorRide.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConnectorRide.Core\ConnectorRide.Core.csproj">
       <Project>{21ed1861-0ac6-49e3-bc9a-857dd89052e6}</Project>
       <Name>ConnectorRide.Core</Name>

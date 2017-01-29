@@ -1,5 +1,5 @@
 using System;
-using Knapcode.ConnectorRide.Core.ClientModels;
+using Knapcode.ConnectorRide.Common.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Knapcode.ConnectorRide.Core.ClientModels;
+using Knapcode.ConnectorRide.Common.Models;
 using Knapcode.ConnectorRide.Core.GtfsModels;
-using Knapcode.ConnectorRide.Core.ScraperModels;
-using Schedule = Knapcode.ConnectorRide.Core.ScraperModels.Schedule;
+using Schedule = Knapcode.ConnectorRide.Common.Models.Schedule;
 
 namespace Knapcode.ConnectorRide.Core
 {
