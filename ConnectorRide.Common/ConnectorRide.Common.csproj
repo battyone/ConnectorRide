@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard1.0;net40</TargetFrameworks>
-    <PackageVersion>3.2.0</PackageVersion>
+    <PackageId>Knapcode.ConnectorRide.Common</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
   </PropertyGroup>
 </Project>
