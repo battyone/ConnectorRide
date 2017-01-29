@@ -41,6 +41,14 @@ GTFS             | https://connectorride.blob.core.windows.net/scrape/gtfs/lates
 GTFS (ungrouped) | https://connectorride.blob.core.windows.net/scrape/gtfs-ungrouped/latest.zip
 Last Processed   | https://connectorride.blob.core.windows.net/scrape/schedules/latest-status.json
 
+## Packages
+
+You can deserialize the JSON feed mentioned into the `ScrapeResult` model found in the following package:
+
+```
+Install-Package Knapcode.ConnectorRide.Common
+```
+
 ## Future
 
 1. Scrape [msshuttle.mobi](http://msshuttle.mobi).
