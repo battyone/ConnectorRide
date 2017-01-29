@@ -1,7 +1,9 @@
+using System.Collections.Generic;
+
 namespace Knapcode.ConnectorRide.Common.Models
 {
     public class Polyline
     {
-        public Location[] MapWayPoints { get; set; }
+        public IEnumerable<Location> MapWayPoints { get; set; }
     }
 }

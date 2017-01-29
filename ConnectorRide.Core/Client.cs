@@ -22,7 +22,7 @@ namespace Knapcode.ConnectorRide.Core
 {
     public interface IClient
     {
-        Task<ScheduleReference[]> GetScheduleReferencesAsync();
+        Task<IEnumerable<ScheduleReference>> GetScheduleReferencesAsync();
         Task<Schedule> GetScheduleAsync(ScheduleReference reference);
         Task<Map> GetMapAsync(MapReference reference);
         string Version { get; }
@@ -51,7 +51,7 @@ namespace Knapcode.ConnectorRide.Core
             _lazyContext = new Lazy<IBrowsingContext>(GetContext);
         }
 
-        public async Task<ScheduleReference[]> GetScheduleReferencesAsync()
+        public async Task<IEnumerable<ScheduleReference>> GetScheduleReferencesAsync()
         {
             var document = await GetDocumentAsync("https://www.connectorride.mobi/Schedules");
 
@@ -60,7 +60,7 @@ namespace Knapcode.ConnectorRide.Core
                 .OfType<IHtmlAnchorElement>()
                 .Where(a => a.Href.Contains("Schedules/Schedule2?name="))
                 .Select(a => new ScheduleReference { Href = a.Href })
-                .ToArray();
+                .ToList();
         }
 
         public async Task<Schedule> GetScheduleAsync(ScheduleReference reference)
@@ -165,7 +165,7 @@ namespace Knapcode.ConnectorRide.Core
                    .FirstOrDefault(x => x.NodeName == "TBODY")?
                    .Children?
                    .Where(x => x.NodeName == "TR")?
-                   .ToArray();
+                   .ToList();
             
             if (rows != null)
             {
@@ -176,15 +176,15 @@ namespace Knapcode.ConnectorRide.Core
                         .Where(x => x.NodeName == "TD")
                         .OfType<IHtmlTableDataCellElement>()
                         .Skip(1)
-                        .ToArray();
+                        .ToList();
 
-                    if (cells.Length != stops.Count)
+                    if (cells.Count != stops.Count)
                     {
                         throw new ConnectorRideException($"One of rows of the schedule table does not have the right number of columns on the schedule page: {reference.Href}");
                     }
 
                     var stopTimes = new List<TableStopTime>();
-                    for (int i = 0; i < cells.Length; i++)
+                    for (int i = 0; i < cells.Count; i++)
                     {
                         var cellText = cells[i].TextContent.Trim();
                         if (cellText == "----")
@@ -207,15 +207,15 @@ namespace Knapcode.ConnectorRide.Core
 
                     trips.Add(new TableTrip
                     {
-                        StopTimes = stopTimes.ToArray()
+                        StopTimes = stopTimes.ToList()
                     });
                 }
             }
 
             return new Table
             {
-                Stops = stops.ToArray(),
-                Trips = trips.ToArray()
+                Stops = stops.ToList(),
+                Trips = trips.ToList()
             };
         }
 

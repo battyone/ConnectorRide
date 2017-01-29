@@ -1,7 +1,9 @@
+using System.Collections.Generic;
+
 namespace Knapcode.ConnectorRide.Common.Models
 {
     public class TableTrip
     {
-        public TableStopTime[] StopTimes { get; set; }
+        public IEnumerable<TableStopTime> StopTimes { get; set; }
     }
 }

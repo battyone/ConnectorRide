@@ -36,13 +36,13 @@ namespace Knapcode.ConnectorRide.Core
             // Collect the output data.
             return new GtfsFeed
             {
-                Agencies = new[] { context.Agency },
-                Stops = context.StopNames.Select(x => context.StopAndClientData[x].Stop).ToArray(),
-                Routes = context.RouteNames.Select(x => context.Routes[x]).ToArray(),
-                Trips = context.Trips.ToArray(),
-                StopTimes = context.StopTimes.ToArray(),
-                Calendar = new[] { context.Service },
-                Shapes = context.ShapePoints.ToArray()
+                Agencies = new List<Agency> { context.Agency },
+                Stops = context.StopNames.Select(x => context.StopAndClientData[x].Stop).ToList(),
+                Routes = context.RouteNames.Select(x => context.Routes[x]).ToList(),
+                Trips = context.Trips.ToList(),
+                StopTimes = context.StopTimes.ToList(),
+                Calendar = new List<Service> { context.Service },
+                Shapes = context.ShapePoints.ToList()
             };
         }
 
@@ -275,19 +275,19 @@ namespace Knapcode.ConnectorRide.Core
             foreach (var nameGroup in nameGroups)
             {
                 string name = nameGroup.Key;
-                var schedules = nameGroup.ToArray();
+                var schedules = nameGroup.ToList();
 
                 var periodGroups = schedules.ToLookup(p => p.NameWithPeriod.Period);
-                var am = periodGroups[Period.Am].ToArray();
-                if (am.Length != 1)
+                var am = periodGroups[Period.Am].ToList();
+                if (am.Count != 1)
                 {
-                    throw new ConnectorRideException($"There should be exactly one (not {am.Length}) AM schedules with the name '{name}'.");
+                    throw new ConnectorRideException($"There should be exactly one (not {am.Count}) AM schedules with the name '{name}'.");
                 }
 
-                var pm = periodGroups[Period.Pm].ToArray();
-                if (pm.Length != 1)
+                var pm = periodGroups[Period.Pm].ToList();
+                if (pm.Count != 1)
                 {
-                    throw new ConnectorRideException($"There should be exactly one (not {am.Length}) PM schedules with the name '{name}'.");
+                    throw new ConnectorRideException($"There should be exactly one (not {am.Count}) PM schedules with the name '{name}'.");
                 }
 
                 if (context.GroupAmPm)

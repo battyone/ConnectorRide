@@ -37,7 +37,7 @@ namespace Knapcode.ConnectorRide.Core.Tests
                 stream.Seek(0, SeekOrigin.Begin);
                 using (var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read))
                 {
-                    var fullNames = zipArchive.Entries.Select(e => e.FullName).OrderBy(e => e).ToArray();
+                    var fullNames = zipArchive.Entries.Select(e => e.FullName).OrderBy(e => e).ToList();
                     Assert.Equal(
                         new[] { "agency.txt", "calendar.txt", "routes.txt", "shapes.txt", "stop_times.txt", "stops.txt", "trips.txt" },
                         fullNames);

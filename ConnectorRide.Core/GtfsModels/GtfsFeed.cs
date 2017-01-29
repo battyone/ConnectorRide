@@ -1,13 +1,15 @@
+using System.Collections.Generic;
+
 namespace Knapcode.ConnectorRide.Core.GtfsModels
 {
     public class GtfsFeed
     {
-        public Agency[] Agencies { get; set; }
-        public Stop[] Stops { get; set; }
-        public Route[] Routes { get; set; }
-        public Trip[] Trips { get; set; }
-        public StopTime[] StopTimes { get; set; }
-        public Service[] Calendar { get; set; }
-        public ShapePoint[] Shapes { get; set; }
+        public List<Agency> Agencies { get; set; }
+        public List<Stop> Stops { get; set; }
+        public List<Route> Routes { get; set; }
+        public List<Trip> Trips { get; set; }
+        public List<StopTime> StopTimes { get; set; }
+        public List<Service> Calendar { get; set; }
+        public List<ShapePoint> Shapes { get; set; }
     }
 }

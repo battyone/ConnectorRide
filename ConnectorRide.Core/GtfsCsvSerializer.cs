@@ -9,18 +9,18 @@ namespace Knapcode.ConnectorRide.Core
 {
     public interface IGtfsCsvSerializer
     {
-        void SerializeAgencies(Stream stream, Agency[] records);
-        void SerializeStops(Stream stream, Stop[] records);
-        void SerializeRoutes(Stream stream, Route[] records);
-        void SerializeTrips(Stream stream, Trip[] records);
-        void SerializeCalendar(Stream stream, Service[] records);
-        void SerializeStopTimes(Stream stream, StopTime[] records);
-        void SerializeShapes(Stream stream, ShapePoint[] records);
+        void SerializeAgencies(Stream stream, IEnumerable<Agency> records);
+        void SerializeStops(Stream stream, IEnumerable<Stop> records);
+        void SerializeRoutes(Stream stream, IEnumerable<Route> records);
+        void SerializeTrips(Stream stream, IEnumerable<Trip> records);
+        void SerializeCalendar(Stream stream, IEnumerable<Service> records);
+        void SerializeStopTimes(Stream stream, IEnumerable<StopTime> records);
+        void SerializeShapes(Stream stream, IEnumerable<ShapePoint> records);
     }
 
     public class GtfsCsvSerializer : IGtfsCsvSerializer
     {
-        public void SerializeAgencies(Stream stream, Agency[] records)
+        public void SerializeAgencies(Stream stream, IEnumerable<Agency> records)
         {
             SerializeCsv(
                 stream,
@@ -42,7 +42,7 @@ namespace Knapcode.ConnectorRide.Core
                 });
         }
 
-        public void SerializeStops(Stream stream, Stop[] records)
+        public void SerializeStops(Stream stream, IEnumerable<Stop> records)
         {
             SerializeCsv(
                 stream,
@@ -65,7 +65,7 @@ namespace Knapcode.ConnectorRide.Core
                 });
         }
 
-        public void SerializeRoutes(Stream stream, Route[] records)
+        public void SerializeRoutes(Stream stream, IEnumerable<Route> records)
         {
             SerializeCsv(
                 stream,
@@ -86,7 +86,7 @@ namespace Knapcode.ConnectorRide.Core
                 });
         }
 
-        public void SerializeTrips(Stream stream, Trip[] records)
+        public void SerializeTrips(Stream stream, IEnumerable<Trip> records)
         {
             SerializeCsv(
                 stream,
@@ -109,7 +109,7 @@ namespace Knapcode.ConnectorRide.Core
                 });
         }
 
-        public void SerializeCalendar(Stream stream, Service[] records)
+        public void SerializeCalendar(Stream stream, IEnumerable<Service> records)
         {
             SerializeCsv(
                 stream,
@@ -142,7 +142,7 @@ namespace Knapcode.ConnectorRide.Core
                 });
         }
 
-        public void SerializeStopTimes(Stream stream, StopTime[] records)
+        public void SerializeStopTimes(Stream stream, IEnumerable<StopTime> records)
         {
             SerializeCsv(
                 stream,
@@ -169,7 +169,7 @@ namespace Knapcode.ConnectorRide.Core
                 });
         }
 
-        public void SerializeShapes(Stream stream, ShapePoint[] records)
+        public void SerializeShapes(Stream stream, IEnumerable<ShapePoint> records)
         {
             SerializeCsv(
                 stream,
