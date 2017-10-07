@@ -13,6 +13,11 @@ namespace Knapcode.ConnectorRide.Core
 
     public class GtfsConverter : IGtfsConverter
     {
+        private static readonly IReadOnlyDictionary<string, string> ScheduleNameMapping = new Dictionary<string, string>
+        {
+            { "BALLARD-WHITTIER HEIGHTS PM", "BALLARD-WHITTIER PM" },
+        };
+
         public GtfsFeed ConvertToFeed(ScrapeResult scrapeResult, bool groupAmPm)
         {
             var context = new ConversionContext { ScrapeResult = scrapeResult, GroupAmPm = groupAmPm };
@@ -287,7 +292,7 @@ namespace Knapcode.ConnectorRide.Core
                 var pm = periodGroups[Period.Pm].ToList();
                 if (pm.Count != 1)
                 {
-                    throw new ConnectorRideException($"There should be exactly one (not {am.Count}) PM schedules with the name '{name}'.");
+                    throw new ConnectorRideException($"There should be exactly one (not {pm.Count}) PM schedules with the name '{name}'.");
                 }
 
                 if (context.GroupAmPm)
@@ -318,6 +323,12 @@ namespace Knapcode.ConnectorRide.Core
 
         private NameWithPeriod GetNameWithPeriod(string name)
         {
+            string mappedName;
+            if (ScheduleNameMapping.TryGetValue(name, out mappedName))
+            {
+                name = mappedName;
+            }
+
             if (name.EndsWith(" AM"))
             {
                 return new NameWithPeriod {Name = name.Substring(0, name.Length - 3), Period = Period.Am};
