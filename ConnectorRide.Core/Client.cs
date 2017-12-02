@@ -169,6 +169,8 @@ namespace Knapcode.ConnectorRide.Core
             
             if (rows != null)
             {
+                var rowCells = new List<List<IHtmlTableDataCellElement>>();
+
                 foreach (var row in rows)
                 {
                     var cells = row
@@ -178,6 +180,18 @@ namespace Knapcode.ConnectorRide.Core
                         .Skip(1)
                         .ToList();
 
+                    rowCells.Add(cells);
+                }
+
+                if (rowCells.Any()
+                    && rowCells.All(x => x.Count == rowCells[0].Count)
+                    && rowCells[0].Count < stops.Count)
+                {
+                    stops = stops.GetRange(0, rowCells[0].Count);
+                }
+
+                foreach (var cells in rowCells)
+                {
                     if (cells.Count != stops.Count)
                     {
                         throw new ConnectorRideException($"One of rows of the schedule table does not have the right number of columns on the schedule page: {reference.Href}");
